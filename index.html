@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeuralForge — Yapay Zeka ile İş Süreçlerinizi Dönüştürün</title>
+<meta name="description" content="NeuralForge, tekrar eden iş görevlerini otomatikleştiren özel AI agent çözümleri sunar. Veri analizi, müşteri desteği, içerik üretimi ve daha fazlası için otonom yapay zeka.">
+<meta name="keywords" content="AI agent, yapay zeka otomasyon, iş süreci otomasyonu, chatbot, veri analizi, NeuralForge">
+<meta property="og:title" content="NeuralForge — Yapay Zeka ile İş Süreçlerinizi Dönüştürün">
+<meta property="og:description" content="Tekrar eden görevleri, karmaşık iş akışlarını otonom olarak yürüten özel AI agent'lar.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#050508;--surface:#0d0d14;--surface2:#111118;--border:rgba(255,255,255,0.07);--accent:#7effd4;--accent2:#ff6b6b;--accent3:#a78bfa;--accent4:#fbbf24;--text:#e8e8f0;--muted:#5a5a72;--glow:rgba(126,255,212,0.15);}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;overflow-x:hidden;}
+
+/* CURSOR — sadece mouse cihazlarda */
+@media(pointer:fine){
+.cursor{width:10px;height:10px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);mix-blend-mode:difference;transition:transform 0.15s;}
+.cursor.expand{transform:translate(-50%,-50%) scale(3);opacity:0.3;}
+.cursor-ring{width:36px;height:36px;border:1.5px solid rgba(126,255,212,0.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);}
+body{cursor:none;}a,button,[onclick]{cursor:none;}
+}
+body::after{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:0.4;}
+/* HAMBURGER */
+.hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:8px;z-index:300;}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text);border-radius:2px;transition:transform 0.3s,opacity 0.3s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-menu{display:none;position:fixed;inset:0;background:rgba(5,5,8,0.98);backdrop-filter:blur(20px);z-index:250;flex-direction:column;align-items:center;justify-content:center;gap:40px;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{font-size:1.6rem;font-weight:700;color:var(--text);text-decoration:none;letter-spacing:0.05em;transition:color 0.2s;}
+.mobile-menu a:hover{color:var(--accent);}
+/* BACK TO TOP */
+.back-top{position:fixed;bottom:28px;right:28px;width:44px;height:44px;background:rgba(126,255,212,0.12);border:1px solid rgba(126,255,212,0.3);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:1.2rem;z-index:400;opacity:0;pointer-events:none;transition:opacity 0.3s,transform 0.3s;transform:translateY(10px);border-radius:4px;}
+.back-top.visible{opacity:1;pointer-events:all;transform:translateY(0);}
+.back-top:hover{background:rgba(126,255,212,0.22);}
+/* FLOATING CTA */
+.float-cta{position:fixed;bottom:28px;left:28px;z-index:400;display:flex;align-items:center;gap:10px;background:var(--accent);color:#050508;padding:12px 20px;font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;border:none;box-shadow:0 0 32px rgba(126,255,212,0.3);transform:translateX(-120px);transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.2s;border-radius:4px;}
+.float-cta.visible{transform:translateX(0);}
+.float-cta:hover{box-shadow:0 0 48px rgba(126,255,212,0.5);}
+.scan{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);z-index:500;animation:scan 5s linear infinite;opacity:0.15;pointer-events:none;}
+@keyframes scan{from{top:0%;}to{top:100%;}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid transparent;transition:border-color 0.3s,background 0.3s;}
+nav.scrolled{background:rgba(5,5,8,0.92);backdrop-filter:blur(24px);border-bottom-color:var(--border);}
+.nav-logo{font-size:1.1rem;font-weight:800;letter-spacing:0.15em;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;}
+.nav-logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;box-shadow:0 0 12px var(--accent);animation:pulse 2s infinite;flex-shrink:0;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(0.6);}}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;font-family:'DM Mono',monospace;}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{font-size:0.72rem;font-family:'DM Mono',monospace;letter-spacing:0.1em;text-transform:uppercase;padding:10px 22px;background:transparent;border:1px solid var(--accent);color:var(--accent);transition:background 0.2s,box-shadow 0.2s;}
+.nav-cta:hover{background:rgba(126,255,212,0.1);box-shadow:0 0 24px var(--glow);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:100px 48px 80px;position:relative;overflow:hidden;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:80px 80px;mask-image:radial-gradient(ellipse 70% 60% at 50% 40%,black,transparent);}
+.hero-glow{position:absolute;top:-20%;left:50%;transform:translateX(-50%);width:800px;height:500px;background:radial-gradient(ellipse,rgba(126,255,212,0.08) 0%,transparent 70%);pointer-events:none;}
+.hero-glow2{position:absolute;bottom:0;right:-10%;width:500px;height:400px;background:radial-gradient(ellipse,rgba(167,139,250,0.06) 0%,transparent 70%);pointer-events:none;}
+.hero-content{flex:0 0 48%;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2;}
+.hero-robot-wrap{flex:0 0 52%;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;}
+.hero-tag{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:12px;margin-bottom:32px;opacity:0;animation:fadeUp 0.8s 0.2s forwards;}
+.hero-tag::before{content:'';display:block;width:32px;height:1px;background:var(--accent);}
+.hero-title{font-size:clamp(3.5rem,7vw,7rem);font-weight:800;line-height:0.92;letter-spacing:-0.03em;max-width:700px;opacity:0;animation:fadeUp 0.8s 0.4s forwards;}
+.hero-title em{font-style:normal;color:transparent;-webkit-text-stroke:1px var(--accent);opacity:0.7;}
+.hero-sub{margin-top:36px;font-size:1rem;color:var(--muted);max-width:480px;line-height:1.7;font-weight:400;opacity:0;animation:fadeUp 0.8s 0.6s forwards;}
+.hero-actions{margin-top:52px;display:flex;align-items:center;gap:24px;opacity:0;animation:fadeUp 0.8s 0.8s forwards;}
+.hero-stats{position:absolute;right:48px;bottom:80px;display:flex;flex-direction:column;gap:32px;opacity:0;animation:fadeUp 0.8s 1s forwards;z-index:2;}
+.stat{text-align:right;}
+.stat-num{font-size:2rem;font-weight:800;color:var(--accent);letter-spacing:-0.04em;}
+.stat-label{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-top:2px;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+/* BUTTONS */
+.btn-primary{display:inline-flex;align-items:center;gap:10px;padding:16px 36px;background:var(--accent);color:#050508;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-weight:700;font-size:0.85rem;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;border:none;transition:box-shadow 0.2s,transform 0.2s;}
+.btn-primary:hover{box-shadow:0 0 40px rgba(126,255,212,0.4);transform:translateY(-2px);}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;transition:border-color 0.2s,color 0.2s;}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent);}
+.btn-secondary{font-family:'DM Mono',monospace;font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;background:none;border:none;display:inline-flex;align-items:center;gap:8px;transition:color 0.2s;}
+.btn-secondary:hover{color:var(--text);}
+.btn-secondary::after{content:'→';transition:transform 0.2s;}
+.btn-secondary:hover::after{transform:translateX(4px);}
+
+/* BRAND BAR */
+.brand-bar{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:28px 48px;background:var(--surface);}
+.brand-bar-label{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:24px;}
+.brand-logos{display:flex;align-items:center;justify-content:center;gap:52px;flex-wrap:wrap;}
+.brand-logo{font-family:'DM Mono',monospace;font-size:0.75rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.18);transition:color 0.3s;}
+.brand-logo:hover{color:rgba(255,255,255,0.5);}
+
+/* TICKER */
+.ticker{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 0;overflow:hidden;background:var(--bg);}
+.ticker-inner{display:flex;gap:64px;width:max-content;animation:ticker 22s linear infinite;}
+.ticker-item{font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:16px;white-space:nowrap;}
+.ticker-item span{color:var(--accent);}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* SECTION COMMON */
+.section{padding:120px 48px;}
+.section-label{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+.section-label::before{content:'';display:block;width:24px;height:1px;background:var(--accent);}
+.section-title{font-size:clamp(2rem,4vw,3.2rem);font-weight:800;line-height:1.05;letter-spacing:-0.02em;max-width:700px;margin-bottom:16px;}
+.section-title em{font-style:normal;color:var(--accent3);}
+.section-sub{font-size:1rem;color:var(--muted);max-width:560px;line-height:1.7;margin-bottom:64px;}
+
+/* ======== AGENTS OVERVIEW GRID ======== */
+.agents-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
+.ov-card{background:var(--bg);padding:36px;position:relative;overflow:hidden;transition:background 0.3s;}
+.ov-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),var(--glow) 0%,transparent 60%);opacity:0;transition:opacity 0.3s;}
+.ov-card:hover::before{opacity:1;}
+.ov-card:hover{background:var(--surface);}
+.ov-num{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.2em;color:var(--muted);margin-bottom:20px;}
+.ov-icon{font-size:1.8rem;margin-bottom:16px;display:block;}
+.ov-name{font-size:1.1rem;font-weight:700;margin-bottom:8px;}
+.ov-short{font-size:0.83rem;color:var(--muted);line-height:1.55;font-weight:400;margin-bottom:20px;}
+.ov-card .btn-ghost{font-size:0.65rem;padding:8px 16px;}
+.ov-card.featured-ov{grid-column:span 2;background:var(--surface);}
+.ov-badge{position:absolute;top:20px;right:20px;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;padding:5px 12px;background:rgba(126,255,212,0.1);border:1px solid rgba(126,255,212,0.3);color:var(--accent);}
+
+/* ======== AGENT DETAIL SHOWCASE ======== */
+.showcase{padding:0 48px 120px;}
+
+.showcase-header{padding:80px 0 56px;border-top:1px solid var(--border);}
+.showcase-header-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:40px;flex-wrap:wrap;}
+.sh-left{min-width:0;}
+.sh-agent-id{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;display:flex;align-items:center;gap:10px;}
+.sh-agent-id::before{content:'';display:block;width:20px;height:1px;background:var(--accent);}
+.sh-title{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-0.02em;line-height:1.1;margin-bottom:16px;}
+.sh-desc{font-size:0.95rem;color:var(--muted);line-height:1.75;max-width:560px;}
+.sh-right{display:flex;flex-direction:column;gap:16px;min-width:240px;}
+.sh-metric{background:var(--surface);border:1px solid var(--border);padding:20px 24px;display:flex;flex-direction:column;gap:4px;}
+.sh-metric-val{font-size:1.6rem;font-weight:800;color:var(--accent);letter-spacing:-0.03em;}
+.sh-metric-label{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+.sh-metrics-row{display:flex;gap:16px;}
+
+/* DEMO PANEL */
+.demo-panel{background:var(--surface);border:1px solid var(--border);overflow:hidden;margin-bottom:1px;}
+.demo-panel-tabs{display:flex;border-bottom:1px solid var(--border);}
+.dp-tab{font-family:'DM Mono',monospace;font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;padding:14px 24px;color:var(--muted);background:none;border:none;border-right:1px solid var(--border);transition:color 0.2s,background 0.2s;white-space:nowrap;}
+.dp-tab:hover{color:var(--text);}
+.dp-tab.active{color:var(--accent);background:rgba(126,255,212,0.05);border-bottom:1px solid var(--accent);margin-bottom:-1px;}
+.demo-panel-body{padding:32px;}
+.dp-pane{display:none;}
+.dp-pane.active{display:block;}
+
+/* TERMINAL STYLE */
+.terminal{background:#020204;border:1px solid rgba(126,255,212,0.1);padding:24px;font-family:'DM Mono',monospace;font-size:0.82rem;line-height:1.8;color:#7effd4;max-height:340px;overflow-y:auto;position:relative;}
+.terminal::-webkit-scrollbar{width:4px;}
+.terminal::-webkit-scrollbar-thumb{background:rgba(126,255,212,0.2);}
+.t-line{display:flex;gap:12px;align-items:flex-start;margin-bottom:2px;}
+.t-prompt{color:var(--muted);flex-shrink:0;user-select:none;}
+.t-cmd{color:#e8e8f0;}
+.t-out{color:#7effd4;}
+.t-warn{color:var(--accent4);}
+.t-err{color:var(--accent2);}
+.t-dim{color:var(--muted);}
+.t-hi{color:#fff;font-weight:700;}
+.terminal-run{margin-top:16px;display:flex;gap:12px;align-items:center;}
+.terminal-run input{flex:1;background:#020204;border:1px solid rgba(126,255,212,0.15);color:#7effd4;padding:10px 16px;font-family:'DM Mono',monospace;font-size:0.78rem;outline:none;transition:border-color 0.2s;}
+.terminal-run input:focus{border-color:rgba(126,255,212,0.4);}
+.terminal-run input::placeholder{color:var(--muted);}
+.run-btn{background:rgba(126,255,212,0.1);border:1px solid rgba(126,255,212,0.3);color:var(--accent);font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;padding:10px 20px;transition:background 0.2s;}
+.run-btn:hover{background:rgba(126,255,212,0.2);}
+.typing::after{content:'▌';animation:blink 0.8s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+/* CHAT PANEL */
+.chat-window{background:#020204;border:1px solid rgba(126,255,212,0.1);height:320px;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px;}
+.chat-window::-webkit-scrollbar{width:4px;}
+.chat-window::-webkit-scrollbar-thumb{background:rgba(126,255,212,0.2);}
+.chat-msg{max-width:75%;display:flex;flex-direction:column;gap:4px;}
+.chat-msg.user{align-self:flex-end;align-items:flex-end;}
+.chat-msg.bot{align-self:flex-start;}
+.chat-bubble{padding:10px 16px;font-size:0.85rem;line-height:1.55;font-weight:400;}
+.chat-msg.user .chat-bubble{background:rgba(126,255,212,0.12);border:1px solid rgba(126,255,212,0.2);color:var(--text);}
+.chat-msg.bot .chat-bubble{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);}
+.chat-meta{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.05em;}
+.chat-input-row{display:flex;gap:0;margin-top:12px;border:1px solid rgba(126,255,212,0.15);}
+.chat-input-row input{flex:1;background:#020204;border:none;color:var(--text);padding:12px 16px;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:0.85rem;outline:none;}
+.chat-input-row input::placeholder{color:var(--muted);}
+.chat-send{background:rgba(126,255,212,0.1);border:none;border-left:1px solid rgba(126,255,212,0.15);color:var(--accent);padding:12px 20px;font-size:1rem;transition:background 0.2s;}
+.chat-send:hover{background:rgba(126,255,212,0.2);}
+
+/* REPORT PREVIEW */
+.report-preview{background:#020204;border:1px solid rgba(126,255,212,0.1);padding:28px;}
+.rp-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.rp-title{font-size:1rem;font-weight:700;}
+.rp-date{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);}
+.rp-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px;}
+.rp-kpi{background:rgba(255,255,255,0.03);border:1px solid var(--border);padding:14px;text-align:center;}
+.rp-kpi-val{font-size:1.4rem;font-weight:800;color:var(--accent);letter-spacing:-0.03em;}
+.rp-kpi-up{color:#4ade80;}
+.rp-kpi-down{color:var(--accent2);}
+.rp-kpi-label{font-family:'DM Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-top:4px;}
+.rp-chart{display:flex;align-items:flex-end;gap:6px;height:80px;margin-bottom:24px;padding-top:8px;}
+.rp-bar{flex:1;background:rgba(126,255,212,0.15);border-top:2px solid rgba(126,255,212,0.4);position:relative;transition:background 0.2s;}
+.rp-bar:hover{background:rgba(126,255,212,0.25);}
+.rp-bar-label{font-family:'DM Mono',monospace;font-size:0.55rem;color:var(--muted);text-align:center;margin-top:6px;}
+.rp-findings{display:flex;flex-direction:column;gap:8px;}
+.rp-finding{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;background:rgba(255,255,255,0.02);border-left:2px solid var(--accent);font-size:0.82rem;color:var(--muted);}
+.rp-finding-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);margin-top:5px;flex-shrink:0;}
+
+/* WORKFLOW DIAGRAM */
+.workflow-diagram{display:flex;align-items:center;gap:0;overflow-x:auto;padding:24px 0;}
+.wf-step{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:110px;}
+.wf-box{background:rgba(255,255,255,0.03);border:1px solid var(--border);padding:14px 12px;text-align:center;width:100%;transition:border-color 0.2s,background 0.2s;}
+.wf-box.active-wf{border-color:var(--accent);background:rgba(126,255,212,0.06);}
+.wf-icon{font-size:1.3rem;margin-bottom:4px;}
+.wf-label{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);line-height:1.4;}
+.wf-arrow{color:var(--muted);font-size:1.2rem;flex-shrink:0;padding:0 4px;align-self:center;margin-bottom:24px;}
+
+/* FEATURES LIST */
+.features-list{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.feature-item{display:flex;gap:14px;align-items:flex-start;padding:16px;background:rgba(255,255,255,0.02);border:1px solid var(--border);transition:border-color 0.2s;}
+.feature-item:hover{border-color:rgba(126,255,212,0.15);}
+.fi-icon{width:32px;height:32px;border-radius:50%;background:rgba(126,255,212,0.1);border:1px solid rgba(126,255,212,0.2);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;}
+.fi-title{font-size:0.88rem;font-weight:700;margin-bottom:4px;}
+.fi-desc{font-size:0.78rem;color:var(--muted);line-height:1.5;}
+
+/* SHOWCASE SEPARATOR */
+.showcase-divider{height:1px;background:var(--border);margin:0;}
+
+/* LEAD CARD */
+.lead-cards{display:flex;flex-direction:column;gap:10px;}
+.lead-card{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:rgba(255,255,255,0.02);border:1px solid var(--border);transition:border-color 0.2s;}
+.lead-card:hover{border-color:rgba(126,255,212,0.2);}
+.lc-left{display:flex;align-items:center;gap:12px;}
+.lc-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#050508;flex-shrink:0;}
+.lc-name{font-size:0.88rem;font-weight:700;}
+.lc-company{font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);}
+.lc-score{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
+.lc-score-num{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--accent);}
+.lc-score-bar{width:60px;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.lc-score-fill{height:100%;background:var(--accent);border-radius:2px;}
+
+/* EMAIL PREVIEW */
+.email-preview{background:#020204;border:1px solid rgba(126,255,212,0.1);padding:24px;}
+.ep-header{border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:20px;}
+.ep-field{display:flex;gap:12px;margin-bottom:8px;font-size:0.83rem;}
+.ep-field-label{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);min-width:50px;margin-top:1px;}
+.ep-field-val{color:var(--text);}
+.ep-body{font-size:0.88rem;line-height:1.75;color:var(--text);}
+.ep-hi{color:var(--accent);}
+
+/* PROCESS */
+.process{background:var(--surface);padding:120px 48px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);margin-top:64px;}
+.step{background:var(--surface);padding:40px 32px;}
+.step-num{font-size:4rem;font-weight:800;color:var(--border);letter-spacing:-0.05em;line-height:1;margin-bottom:24px;transition:color 0.3s;}
+.step:hover .step-num{color:rgba(126,255,212,0.15);}
+.step-title{font-size:1.05rem;font-weight:700;margin-bottom:12px;}
+.step-desc{font-size:0.83rem;color:var(--muted);line-height:1.6;font-weight:400;}
+
+/* TEAM */
+.team-section{padding:120px 48px;}
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:64px;}
+.team-card{background:var(--bg);padding:36px 32px;position:relative;overflow:hidden;transition:background 0.3s;}
+.team-card:hover{background:var(--surface);}
+.team-card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity 0.4s;}
+.team-card:hover::after{opacity:0.6;}
+.team-photo{width:72px;height:72px;border-radius:50%;margin-bottom:24px;position:relative;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.3rem;color:#050508;}
+.team-photo-ring{position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--border);transition:border-color 0.3s,box-shadow 0.3s;}
+.team-card:hover .team-photo-ring{border-color:rgba(126,255,212,0.4);box-shadow:0 0 16px rgba(126,255,212,0.1);}
+.team-name{font-size:1.05rem;font-weight:700;margin-bottom:6px;}
+.team-role{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;}
+.team-bio{font-size:0.82rem;color:var(--muted);line-height:1.6;}
+.team-social{display:flex;gap:10px;margin-top:20px;}
+.team-social a{font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;border:1px solid var(--border);padding:5px 10px;transition:color 0.2s,border-color 0.2s;}
+.team-social a:hover{color:var(--accent);border-color:rgba(126,255,212,0.3);}
+
+/* TESTIMONIALS */
+.testimonials{padding:120px 48px;background:var(--surface);border-top:1px solid var(--border);}
+.testi-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:64px;}
+.testi-card{background:var(--bg);border:1px solid var(--border);padding:36px;position:relative;transition:border-color 0.3s;}
+.testi-card:hover{border-color:rgba(126,255,212,0.2);}
+.testi-stars{color:var(--accent);font-size:0.75rem;letter-spacing:4px;margin-bottom:16px;}
+.testi-quote{font-size:0.98rem;line-height:1.7;color:var(--text);margin-bottom:28px;}
+.testi-quote::before{content:'"';display:block;font-size:3rem;color:var(--accent);line-height:1;margin-bottom:8px;font-weight:800;}
+.testi-author{display:flex;align-items:center;gap:14px;}
+.testi-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;color:white;flex-shrink:0;}
+.testi-name{font-size:0.85rem;font-weight:700;}
+.testi-role{font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;}
+
+/* CTA */
+.cta-section{padding:140px 48px;text-align:center;position:relative;overflow:hidden;}
+.cta-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(126,255,212,0.07) 0%,transparent 70%);pointer-events:none;}
+.cta-grid-bg{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 60% 70% at 50% 50%,black,transparent);}
+.cta-title{font-size:clamp(2.5rem,6vw,5rem);font-weight:800;line-height:1;letter-spacing:-0.03em;position:relative;z-index:1;margin-bottom:28px;}
+.cta-title em{font-style:normal;-webkit-text-stroke:1px var(--accent);color:transparent;}
+.cta-sub{font-size:1rem;color:var(--muted);max-width:480px;margin:0 auto 52px;line-height:1.7;position:relative;z-index:1;}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:48px;}
+.footer-top{display:flex;gap:80px;margin-bottom:48px;}
+.footer-brand{flex:1.2;}
+.footer-brand-name{font-size:1.1rem;font-weight:800;letter-spacing:0.15em;display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.footer-brand-desc{font-size:0.85rem;color:var(--muted);line-height:1.6;max-width:280px;}
+.footer-col h4{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:20px;}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:12px;}
+.footer-col a{font-size:0.85rem;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.footer-col a:hover{color:var(--text);}
+.footer-bottom{display:flex;align-items:center;justify-content:space-between;padding-top:32px;border-top:1px solid var(--border);}
+.footer-copy{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;color:var(--muted);}
+.footer-bottom-links{display:flex;gap:24px;}
+.footer-bottom-links a{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;}
+.footer-bottom-links a:hover{color:var(--accent);}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.88);backdrop-filter:blur(16px);z-index:5000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;padding:24px;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--surface);border:1px solid rgba(126,255,212,0.15);width:100%;max-width:560px;padding:52px;position:relative;transform:translateY(20px) scale(0.97);transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);max-height:90vh;overflow-y:auto;}
+.modal-overlay.open .modal{transform:translateY(0) scale(1);}
+.modal::-webkit-scrollbar{width:4px;}
+.modal::-webkit-scrollbar-thumb{background:var(--border);}
+.modal-close{position:absolute;top:20px;right:20px;background:none;border:none;color:var(--muted);font-size:1.1rem;transition:color 0.2s;font-family:'DM Mono',monospace;padding:4px 8px;}
+.modal-close:hover{color:var(--text);}
+.modal-tag{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.modal-tag::before{content:'';display:block;width:20px;height:1px;background:var(--accent);}
+.modal-title{font-size:1.8rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;}
+.modal-sub{font-size:0.88rem;color:var(--muted);line-height:1.6;margin-bottom:36px;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.form-group label{font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);}
+.form-group input,.form-group select,.form-group textarea{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text);padding:12px 16px;font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;font-size:0.9rem;outline:none;transition:border-color 0.2s;width:100%;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(126,255,212,0.4);}
+.form-group select option{background:var(--surface);}
+.form-group textarea{resize:vertical;min-height:90px;}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--muted);}
+.form-error{border-color:rgba(255,107,107,0.5)!important;}
+.form-submit{width:100%;margin-top:8px;}
+.modal-success{display:none;text-align:center;padding:40px 0;}
+.modal-success-icon{font-size:3.5rem;margin-bottom:20px;animation:popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes popIn{from{transform:scale(0);}to{transform:scale(1);}}
+.modal-success h3{font-size:1.5rem;font-weight:800;margin-bottom:12px;}
+.modal-success p{font-size:0.88rem;color:var(--muted);line-height:1.7;}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(32px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+.reveal-d1{transition-delay:0.1s;}
+.reveal-d2{transition-delay:0.2s;}
+.reveal-d3{transition-delay:0.3s;}
+
+/* SPINNER */
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(126,255,212,0.2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ======== CYBERPUNK ROBOT ======== */
+.hero-content{flex:0 0 46%;display:flex;flex-direction:column;justify-content:center;position:relative;z-index:2;}
+.hero-robot-wrap{flex:0 0 54%;display:flex;align-items:center;justify-content:center;position:relative;z-index:2;}
+.robot-scene{width:clamp(320px,44vw,560px);height:clamp(400px,55vw,700px);position:relative;opacity:0;animation:fadeUp 1s 1.1s forwards;}
+.robot-status{position:absolute;top:10px;left:50%;transform:translateX(-50%);font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;color:var(--accent);background:rgba(126,255,212,0.06);border:1px solid rgba(126,255,212,0.18);padding:5px 14px;white-space:nowrap;z-index:10;}
+.robot-status::before{content:'';display:inline-block;width:5px;height:5px;background:var(--accent);border-radius:50%;margin-right:7px;animation:pulse 1.5s infinite;vertical-align:middle;box-shadow:0 0 6px var(--accent);}
+.robot-particles{position:absolute;inset:0;pointer-events:none;z-index:0;}
+.rp{position:absolute;font-family:'DM Mono',monospace;font-size:0.58rem;color:var(--accent);opacity:0;animation:floatUp 5s ease-out infinite;letter-spacing:0.1em;}
+.rp:nth-child(1){left:3%;animation-delay:0s;}.rp:nth-child(2){left:15%;animation-delay:1.4s;}.rp:nth-child(3){right:4%;animation-delay:0.8s;}.rp:nth-child(4){right:17%;animation-delay:2.2s;}.rp:nth-child(5){left:44%;animation-delay:1.9s;}.rp:nth-child(6){left:28%;animation-delay:3.1s;}.rp:nth-child(7){right:30%;animation-delay:0.4s;}
+@keyframes floatUp{0%{opacity:0;transform:translateY(0);}15%{opacity:0.9;}75%{opacity:0.3;}100%{opacity:0;transform:translateY(-150px);}}
+#robotSvg{width:100%;height:100%;overflow:visible;}
+@keyframes bodyFloat{0%,100%{transform:translateY(0px);}50%{transform:translateY(-14px);}}
+@keyframes armLSwing{0%,100%{transform:rotate(-8deg);}50%{transform:rotate(8deg);}}
+@keyframes armRSwing{0%,100%{transform:rotate(8deg);}50%{transform:rotate(-8deg);}}
+@keyframes mohawkWave{0%,100%{transform:scaleY(1) skewX(0deg);}40%{transform:scaleY(1.08) skewX(-4deg);}70%{transform:scaleY(0.93) skewX(3deg);}}
+@keyframes legBobL{0%,100%{transform:translateY(0);}50%{transform:translateY(-7px);}}
+@keyframes legBobR{0%,100%{transform:translateY(-7px);}50%{transform:translateY(0);}}
+@keyframes headIdle{0%,100%{transform:rotate(0deg) translateY(0);}30%{transform:rotate(1.2deg) translateY(-2px);}70%{transform:rotate(-0.8deg) translateY(0);}  }
+@keyframes reactorSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+@keyframes reactorSpinRev{from{transform:rotate(0deg);}to{transform:rotate(-360deg);}}
+.robot-body-g{animation:bodyFloat 3.4s ease-in-out infinite;}
+.arm-left-g{transform-origin:188px 276px;animation:armLSwing 3.4s ease-in-out infinite;}
+.arm-right-g{transform-origin:332px 276px;animation:armRSwing 3.4s ease-in-out infinite;}
+.mohawk-g{transform-origin:260px 82px;animation:mohawkWave 2.7s ease-in-out infinite;}
+.leg-left-g{animation:legBobL 3.4s ease-in-out infinite;}
+.leg-right-g{animation:legBobR 3.4s ease-in-out infinite;}
+#robotHead{transform-origin:260px 170px;animation:headIdle 6s ease-in-out infinite;transition:transform 0.18s ease-out;}
+@media(max-width:900px){.hero{flex-direction:column;padding-top:120px;padding-bottom:60px;}.hero-content,.hero-robot-wrap{flex:none;width:100%;}.hero-robot-wrap{margin-top:28px;}.robot-scene{width:min(88vw,360px);height:min(110vw,450px);}.hero-stats{position:static!important;flex-direction:row!important;justify-content:flex-start;gap:28px;margin-top:36px;opacity:1!important;animation:none!important;}.stat{text-align:left!important;}}
+@media(max-width:1024px){
+  .team-grid{grid-template-columns:1fr 1fr;}
+  .process-steps{grid-template-columns:1fr 1fr;}
+  .sh-metrics-row{flex-wrap:wrap;}
+}
+/* FAQ / SSS */
+.faq-section{padding:120px 48px;}
+.faq-list{margin-top:64px;display:flex;flex-direction:column;gap:2px;}
+.faq-item{background:var(--surface);border:1px solid var(--border);overflow:hidden;transition:border-color 0.3s;}
+.faq-item.open{border-color:rgba(126,255,212,0.25);}
+.faq-q{display:flex;align-items:center;justify-content:space-between;padding:24px 32px;font-size:1rem;font-weight:700;cursor:pointer;user-select:none;gap:16px;}
+.faq-q:hover{color:var(--accent);}
+.faq-icon{font-family:'DM Mono',monospace;font-size:1.2rem;color:var(--accent);flex-shrink:0;transition:transform 0.3s;}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.45s cubic-bezier(0.4,0,0.2,1);}
+.faq-a-inner{padding:0 32px 24px;font-size:0.9rem;color:var(--muted);line-height:1.75;border-top:1px solid var(--border);padding-top:20px;}
+.faq-item.open .faq-a{max-height:400px;}
+/* Pricing CTA */
+.pricing-bar{background:linear-gradient(135deg,rgba(126,255,212,0.06),rgba(167,139,250,0.06));border:1px solid rgba(126,255,212,0.15);padding:48px;margin-top:64px;display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap;}
+.pricing-bar-text h3{font-size:1.4rem;font-weight:800;margin-bottom:8px;}
+.pricing-bar-text p{font-size:0.9rem;color:var(--muted);line-height:1.6;}
+@media(max-width:1024px){
+  .process-steps{grid-template-columns:1fr 1fr;}
+  .sh-metrics-row{flex-wrap:wrap;}
+  .faq-section{padding:80px 32px;}
+}
+@media(max-width:900px){
+  nav{padding:16px 24px;}
+  .hamburger{display:flex;}
+  .nav-links{display:none;}
+  .nav-cta{display:none;}
+  .hero,.section,.testimonials,.cta-section,.process,.faq-section,.showcase{padding-left:24px;padding-right:24px;}
+  .hero{padding-top:120px;padding-bottom:80px;}
+  .hero-stats{display:none;}
+  .agents-overview,.ov-card.featured-ov{grid-column:span 1;}
+  .agents-overview{grid-template-columns:1fr;}
+  .testi-grid,.features-list{grid-template-columns:1fr;}
+  .rp-kpis{grid-template-columns:1fr 1fr;}
+  .brand-bar{padding:20px 24px;}
+  .brand-logos{gap:20px;}
+  .footer-top{flex-direction:column;gap:40px;}
+  .footer-bottom{flex-direction:column;gap:16px;text-align:center;}
+  .form-row{grid-template-columns:1fr;}
+  .modal{padding:32px 24px;}
+  .workflow-diagram{flex-wrap:wrap;justify-content:center;}
+  .pricing-bar{flex-direction:column;text-align:center;}
+  .back-top,.float-cta{bottom:16px;}
+  .back-top{right:16px;}
+  .float-cta{left:16px;padding:10px 16px;font-size:0.65rem;}
+  .sh-metrics-row{flex-wrap:wrap;}
+  .showcase{padding-left:16px;padding-right:16px;}
+}
+@media(max-width:600px){
+  .demo-panel-tabs{flex-wrap:wrap;}
+  .hero-title{font-size:clamp(2.8rem,12vw,5rem);}
+  .faq-q{padding:18px 20px;font-size:0.92rem;}
+  .faq-a-inner{padding:0 20px 18px;padding-top:16px;}
+  .section-title{font-size:clamp(1.8rem,7vw,2.6rem);}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scan"></div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal-overlay" id="demoModal" onclick="handleOverlayClick(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalForm">
+      <div class="modal-tag">Ücretsiz Görüşme</div>
+      <h2 class="modal-title">Demo Talep Et</h2>
+      <p class="modal-sub">30 dakikalık ücretsiz keşif görüşmesi için bilgilerinizi bırakın.</p>
+      <div class="form-row">
+        <div class="form-group"><label>Ad *</label><input type="text" id="f-fname" placeholder="Adınız"></div>
+        <div class="form-group"><label>Soyad *</label><input type="text" id="f-lname" placeholder="Soyadınız"></div>
+      </div>
+      <div class="form-group"><label>İş E-postası *</label><input type="email" id="f-email" placeholder="siz@sirket.com"></div>
+      <div class="form-group"><label>Şirket *</label><input type="text" id="f-company" placeholder="Şirket adınız"></div>
+      <div class="form-group">
+        <label>İlgilendiğiniz Çözüm *</label>
+        <select id="f-agent">
+          <option value="" disabled selected>Seçiniz...</option>
+          <option>DataMind Agent — Veri Analizi</option>
+          <option>SupportBot Pro — Müşteri Desteği</option>
+          <option>ContentForge — İçerik Üretimi</option>
+          <option>ResearchBot — Pazar Araştırması</option>
+          <option>WorkflowAgent — Süreç Otomasyonu</option>
+          <option>SalesHunter — Satış &amp; Lead Gen</option>
+          <option>Tüm çözümleri görmek istiyorum</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Notunuz (Opsiyonel)</label><textarea id="f-note" placeholder="Otomatikleştirmek istediğiniz süreç..."></textarea></div>
+      <button class="btn-primary form-submit" onclick="submitDemo()">Görüşme Talep Et <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-success" id="modalSuccess">
+      <div class="modal-success-icon">✦</div>
+      <h3>Talebiniz Alındı!</h3>
+      <p>En kısa sürede sizinle iletişime geçeceğiz.<br>Genellikle 24 saat içinde dönüş yapıyoruz.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MOBILE MENU ===== -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#agents" onclick="closeMobile()">Agents</a>
+  <a href="#showcase" onclick="closeMobile()">Örnekler</a>
+  <a href="#how" onclick="closeMobile()">Süreç</a>
+  <a href="#faq" onclick="closeMobile()">SSS</a>
+  <a href="#testimonials" onclick="closeMobile()">Referanslar</a>
+  <button class="btn-primary" onclick="closeMobile();openModal()" style="margin-top:16px;">Demo Talep Et <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+</div>
+
+<!-- BACK TO TOP -->
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Yukarı çık">↑</button>
+<!-- FLOATING CTA -->
+<button class="float-cta" id="floatCta" onclick="openModal()">⚡ Ücretsiz Demo</button>
+
+<!-- ===== NAV ===== -->
+<nav id="navbar">
+  <a href="#" class="nav-logo"><div class="nav-logo-dot"></div>NEURALFORGE</a>
+  <ul class="nav-links">
+    <li><a href="#agents">Agents</a></li>
+    <li><a href="#showcase">Örnekler</a></li>
+    <li><a href="#how">Süreç</a></li>
+    <li><a href="#faq">SSS</a></li>
+    <li><a href="#testimonials">Referanslar</a></li>
+  </ul>
+  <button class="nav-cta" onclick="openModal()">Demo Talep Et</button>
+  <button class="hamburger" id="hamburger" onclick="toggleMobile()" aria-label="Menü">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero-section">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div><div class="hero-glow2"></div>
+
+  <!-- Left content -->
+  <div class="hero-content">
+    <div class="hero-tag">AI-Powered Automation</div>
+    <h1 class="hero-title">Geleceğin<br><em>Dijital</em><br>Çalışanları</h1>
+    <p class="hero-sub">Tekrar eden görevleri, karmaşık iş akışlarını ve veri işlemlerini otonom olarak yürüten özel AI agent'lar tasarlıyoruz.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="openModal()">Demo Talep Et <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <a href="#showcase" class="btn-secondary">Canlı Örnekleri Gör</a>
+    </div>
+    <div class="hero-stats" style="position:static;flex-direction:row;gap:40px;margin-top:52px;opacity:0;animation:fadeUp 0.8s 1s forwards;">
+      <div class="stat" style="text-align:left;"><div class="stat-num" data-target="47" data-suffix="+">0+</div><div class="stat-label">Aktif Agent</div></div>
+      <div class="stat" style="text-align:left;"><div class="stat-num" data-target="12" data-suffix="K+">0K+</div><div class="stat-label">Saatlik Tasarruf</div></div>
+      <div class="stat" style="text-align:left;"><div class="stat-num" data-target="99" data-suffix=".2%">0%</div><div class="stat-label">Başarı Oranı</div></div>
+    </div>
+  </div>
+
+  <!-- Right: Robot -->
+  <div class="hero-robot-wrap">
+    <div class="robot-scene" id="robotScene">
+      <div class="robot-status">AGENT-7 — ONLINE</div>
+      <div class="robot-particles">
+        <div class="rp" style="bottom:28%">01101</div>
+        <div class="rp" style="bottom:52%">&#x2588;&#x2593;&#x2591;</div>
+        <div class="rp" style="bottom:68%">AI&#x2211;</div>
+        <div class="rp" style="bottom:40%">0xFF</div>
+        <div class="rp" style="bottom:60%">&#x2207;&#x03BB;</div>
+        <div class="rp" style="bottom:46%">SYS</div>
+        <div class="rp" style="bottom:33%">&#x25C8;</div>
+      </div>
+      <svg id="robotSvg" viewBox="0 0 520 640" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="mg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1e2e1e"/><stop offset="60%" stop-color="#0c160c"/><stop offset="100%" stop-color="#060d06"/></linearGradient>
+          <linearGradient id="mg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#243224"/><stop offset="100%" stop-color="#091209"/></linearGradient>
+          <linearGradient id="mg3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#141e14"/><stop offset="100%" stop-color="#0a120a"/></linearGradient>
+          <linearGradient id="acG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="transparent"/><stop offset="50%" stop-color="#7effd4"/><stop offset="100%" stop-color="transparent"/></linearGradient>
+          <linearGradient id="purG" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="transparent"/><stop offset="50%" stop-color="#a78bfa"/><stop offset="100%" stop-color="transparent"/></linearGradient>
+          <linearGradient id="mohG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e040fb"/><stop offset="30%" stop-color="#a78bfa"/><stop offset="65%" stop-color="#7effd4"/><stop offset="100%" stop-color="#2a0845"/></linearGradient>
+          <linearGradient id="visorBg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#050d05"/><stop offset="30%" stop-color="#162416"/><stop offset="70%" stop-color="#162416"/><stop offset="100%" stop-color="#050d05"/></linearGradient>
+          <linearGradient id="coreG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7effd4"/><stop offset="100%" stop-color="#a78bfa"/></linearGradient>
+          <radialGradient id="glowG" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#7effd4" stop-opacity="0.25"/><stop offset="100%" stop-color="#7effd4" stop-opacity="0"/></radialGradient>
+          <radialGradient id="glowP" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a78bfa" stop-opacity="0.3"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/></radialGradient>
+          <radialGradient id="mohawkHalo" cx="50%" cy="100%" r="80%"><stop offset="0%" stop-color="#a78bfa" stop-opacity="0.7"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/></radialGradient>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <filter id="glow2" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="7" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          <clipPath id="visorClip"><rect x="168" y="158" width="184" height="28" rx="6"/></clipPath>
+        </defs>
+        <ellipse cx="260" cy="330" rx="130" ry="155" fill="url(#glowG)" opacity="0.45"/>
+        <ellipse cx="260" cy="190" rx="105" ry="115" fill="url(#glowP)" opacity="0.28"/>
+        <ellipse cx="260" cy="628" rx="86" ry="9" fill="rgba(126,255,212,0.18)"><animate attributeName="rx" values="86;68;86" dur="3.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.4;0.14;0.4" dur="3.4s" repeatCount="indefinite"/></ellipse>
+        <g class="robot-body-g"><!-- LEGS -->
+          <rect x="207" y="401" width="106" height="20" rx="6" fill="url(#mg2)" stroke="#7effd4" stroke-width="0.9" stroke-opacity="0.28"/>
+          <line x1="214" y1="411" x2="306" y2="411" stroke="url(#acG)" stroke-width="0.7" opacity="0.28"/>
+          <g class="leg-left-g">
+            <rect x="214" y="419" width="38" height="90" rx="9" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.9" stroke-opacity="0.28"/>
+            <line x1="222" y1="438" x2="244" y2="438" stroke="#7effd4" stroke-width="0.6" stroke-opacity="0.2"/>
+            <line x1="222" y1="450" x2="244" y2="450" stroke="#7effd4" stroke-width="0.6" stroke-opacity="0.2"/>
+            <ellipse cx="233" cy="509" rx="15" ry="11" fill="url(#mg2)" stroke="#7effd4" stroke-width="1" stroke-opacity="0.35"/>
+            <circle cx="233" cy="509" r="5" fill="#7effd4" opacity="0.28" filter="url(#glow)"/>
+            <rect x="217" y="518" width="32" height="62" rx="7" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.8" stroke-opacity="0.25"/>
+            <rect x="206" y="576" width="54" height="18" rx="6" fill="url(#mg2)" stroke="#7effd4" stroke-width="0.9" stroke-opacity="0.4"/>
+            <rect x="208" y="590" width="50" height="4" rx="2" fill="#7effd4" opacity="0.32" filter="url(#glow)"><animate attributeName="opacity" values="0.32;0.62;0.32" dur="2s" repeatCount="indefinite"/></rect>
+          </g>
+          <g class="leg-right-g">
+            <rect x="268" y="419" width="38" height="90" rx="9" fill="url(#mg1)" stroke="#a78bfa" stroke-width="0.9" stroke-opacity="0.28"/>
+            <line x1="276" y1="438" x2="298" y2="438" stroke="#a78bfa" stroke-width="0.6" stroke-opacity="0.2"/>
+            <line x1="276" y1="450" x2="298" y2="450" stroke="#a78bfa" stroke-width="0.6" stroke-opacity="0.2"/>
+            <ellipse cx="287" cy="509" rx="15" ry="11" fill="url(#mg2)" stroke="#a78bfa" stroke-width="1" stroke-opacity="0.35"/>
+            <circle cx="287" cy="509" r="5" fill="#a78bfa" opacity="0.28" filter="url(#glow)"/>
+            <rect x="271" y="518" width="32" height="62" rx="7" fill="url(#mg1)" stroke="#a78bfa" stroke-width="0.8" stroke-opacity="0.25"/>
+            <rect x="260" y="576" width="54" height="18" rx="6" fill="url(#mg2)" stroke="#a78bfa" stroke-width="0.9" stroke-opacity="0.4"/>
+            <rect x="262" y="590" width="50" height="4" rx="2" fill="#a78bfa" opacity="0.32" filter="url(#glow)"><animate attributeName="opacity" values="0.62;0.32;0.62" dur="2s" repeatCount="indefinite"/></rect>
+          </g>
+        
+        <!-- TORSO -->
+          <path d="M196 260 Q192 250 206 247 L314 247 Q328 250 324 260 L328 390 Q328 402 315 404 L205 404 Q192 402 192 390 Z" fill="url(#mg1)" stroke="#7effd4" stroke-width="1.1" stroke-opacity="0.4"/>
+          <path d="M182 259 Q182 247 203 244 L317 244 Q338 247 338 259 L338 276 Q290 283 260 283 Q230 283 182 276 Z" fill="url(#mg2)" stroke="#7effd4" stroke-width="1" stroke-opacity="0.5"/>
+          <rect x="184" y="271" width="32" height="4" rx="2" fill="#7effd4" opacity="0.65" filter="url(#glow)"><animate attributeName="opacity" values="0.65;1;0.65" dur="1.9s" repeatCount="indefinite"/></rect>
+          <rect x="304" y="271" width="32" height="4" rx="2" fill="#a78bfa" opacity="0.65" filter="url(#glow)"><animate attributeName="opacity" values="1;0.65;1" dur="2.1s" repeatCount="indefinite"/></rect>
+          <line x1="210" y1="287" x2="310" y2="287" stroke="url(#acG)" stroke-width="0.9" opacity="0.4"/>
+          <line x1="207" y1="328" x2="313" y2="328" stroke="url(#acG)" stroke-width="0.7" opacity="0.22"/>
+          <line x1="207" y1="362" x2="313" y2="362" stroke="url(#acG)" stroke-width="0.7" opacity="0.22"/>
+          <line x1="260" y1="283" x2="260" y2="404" stroke="#7effd4" stroke-width="0.5" stroke-opacity="0.1"/>
+          <!-- CHEST REACTOR -->
+          <circle cx="260" cy="320" r="36" fill="url(#mg2)" stroke="#7effd4" stroke-width="1.5" stroke-opacity="0.55"/>
+          <circle cx="260" cy="320" r="27" fill="rgba(0,0,0,0.72)" stroke="#7effd4" stroke-width="0.9" stroke-opacity="0.3"/>
+          <circle cx="260" cy="320" r="22" fill="none" stroke="url(#acG)" stroke-width="2.2" stroke-dasharray="10 5" stroke-opacity="0.8"><animateTransform attributeName="transform" type="rotate" from="0 260 320" to="360 260 320" dur="5s" repeatCount="indefinite"/></circle>
+          <circle cx="260" cy="320" r="15" fill="none" stroke="url(#purG)" stroke-width="1.5" stroke-dasharray="6 4" stroke-opacity="0.6"><animateTransform attributeName="transform" type="rotate" from="0 260 320" to="-360 260 320" dur="3.2s" repeatCount="indefinite"/></circle>
+          <circle cx="260" cy="320" r="9" fill="url(#coreG)" opacity="0.9" filter="url(#glow2)"><animate attributeName="r" values="9;13;9" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.9;1;0.9" dur="2s" repeatCount="indefinite"/></circle>
+          <circle cx="260" cy="320" r="4" fill="white" opacity="0.95"><animate attributeName="opacity" values="0.95;0.35;0.95" dur="2s" repeatCount="indefinite"/></circle>
+          <!-- side vents -->
+          <g opacity="0.45">
+            <rect x="196" y="353" width="22" height="30" rx="2" fill="rgba(0,0,0,0.5)" stroke="#7effd4" stroke-width="0.6" stroke-opacity="0.35"/>
+            <line x1="198" y1="359" x2="216" y2="359" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.4"/>
+            <line x1="198" y1="366" x2="216" y2="366" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.4"/>
+            <line x1="198" y1="373" x2="216" y2="373" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.4"/>
+            <line x1="198" y1="380" x2="216" y2="380" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.4"/>
+            <rect x="302" y="353" width="22" height="30" rx="2" fill="rgba(0,0,0,0.5)" stroke="#a78bfa" stroke-width="0.6" stroke-opacity="0.35"/>
+            <line x1="304" y1="359" x2="322" y2="359" stroke="#a78bfa" stroke-width="0.7" stroke-opacity="0.4"/>
+            <line x1="304" y1="366" x2="322" y2="366" stroke="#a78bfa" stroke-width="0.7" stroke-opacity="0.4"/>
+            <line x1="304" y1="373" x2="322" y2="373" stroke="#a78bfa" stroke-width="0.7" stroke-opacity="0.4"/>
+            <line x1="304" y1="380" x2="322" y2="380" stroke="#a78bfa" stroke-width="0.7" stroke-opacity="0.4"/>
+          </g>
+          
+        <!-- NECK -->
+          <rect x="236" y="232" width="48" height="18" rx="5" fill="url(#mg2)" stroke="#7effd4" stroke-width="0.9" stroke-opacity="0.4"/>
+          <rect x="238" y="234" width="6" height="14" rx="3" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.5" stroke-opacity="0.4"><animate attributeName="opacity" values="1;0.3;1" dur="1.6s" repeatCount="indefinite"/></rect>
+          <rect x="247" y="234" width="6" height="14" rx="3" fill="url(#mg1)" stroke="#a78bfa" stroke-width="0.5" stroke-opacity="0.4"><animate attributeName="opacity" values="0.3;1;0.3" dur="1.8s" repeatCount="indefinite"/></rect>
+          <rect x="256" y="234" width="6" height="14" rx="3" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.5" stroke-opacity="0.4"><animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/></rect>
+          <rect x="265" y="234" width="6" height="14" rx="3" fill="url(#mg1)" stroke="#a78bfa" stroke-width="0.5" stroke-opacity="0.4"><animate attributeName="opacity" values="0.3;1;0.3" dur="1.4s" repeatCount="indefinite"/></rect>
+          <rect x="274" y="234" width="6" height="14" rx="3" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.5" stroke-opacity="0.4"><animate attributeName="opacity" values="1;0.3;1" dur="2.2s" repeatCount="indefinite"/></rect>
+          
+        <!-- HEAD -->
+          <g id="robotHead">
+            <path d="M180 178 Q178 106 260 100 Q342 106 340 178 L336 232 Q330 246 260 248 Q190 246 184 232 Z" fill="url(#mg1)" stroke="#7effd4" stroke-width="1.3" stroke-opacity="0.45"/>
+            <path d="M203 153 Q208 118 260 114 Q312 118 317 153" fill="none" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.18"/>
+            <path d="M218 141 Q226 114 260 111 Q294 114 302 141" fill="none" stroke="#7effd4" stroke-width="0.5" stroke-opacity="0.13"/>
+            <circle cx="204" cy="153" r="3.5" fill="url(#mg2)" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.45"/>
+            <circle cx="316" cy="153" r="3.5" fill="url(#mg2)" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.45"/>
+            <circle cx="236" cy="118" r="2.5" fill="url(#mg2)" stroke="#7effd4" stroke-width="0.5" stroke-opacity="0.3"/>
+            <circle cx="284" cy="118" r="2.5" fill="url(#mg2)" stroke="#7effd4" stroke-width="0.5" stroke-opacity="0.3"/>
+            <circle cx="260" cy="111" r="3" fill="url(#mg2)" stroke="#a78bfa" stroke-width="0.7" stroke-opacity="0.4"/>
+            <!-- MOHAWK -->
+            <g class="mohawk-g">
+              <rect x="246" y="94" width="28" height="9" rx="4.5" fill="#1a0435" stroke="#a78bfa" stroke-width="0.9" stroke-opacity="0.65"/>
+              <path d="M248 102 C247 84,244 68,246 40 C247 52,250 66,251 102" fill="url(#mohG)" opacity="0.9"/>
+              <path d="M252 102 C251 80,249 62,251 26 C252 40,254 58,255 102" fill="url(#mohG)" opacity="0.95"/>
+              <path d="M255 102 C254 78,253 58,256 16 C257 34,258 56,258 102" fill="url(#mohG)"/>
+              <path d="M259 102 C259 76,259 56,260 15 C261 36,261 58,261 102" fill="url(#mohG)"/>
+              <path d="M263 102 C264 78,265 58,264 16 C263 34,262 56,262 102" fill="url(#mohG)"/>
+              <path d="M267 102 C268 80,270 62,268 26 C267 40,265 58,265 102" fill="url(#mohG)" opacity="0.95"/>
+              <path d="M271 102 C272 84,275 68,273 40 C272 52,269 66,269 102" fill="url(#mohG)" opacity="0.9"/>
+              <ellipse cx="260" cy="98" rx="20" ry="9" fill="url(#mohawkHalo)" opacity="0.65"/>
+              <circle cx="246" cy="41" r="2.5" fill="#e040fb" filter="url(#glow)"><animate attributeName="opacity" values="1;0.2;1" dur="1.1s" repeatCount="indefinite"/></circle>
+              <circle cx="251" cy="27" r="3" fill="#a78bfa" filter="url(#glow)"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.8s" repeatCount="indefinite"/></circle>
+              <circle cx="260" cy="16" r="4.5" fill="#7effd4" filter="url(#glow2)"><animate attributeName="opacity" values="1;0.4;1" dur="1s" repeatCount="indefinite"/></circle>
+              <circle cx="269" cy="27" r="3" fill="#a78bfa" filter="url(#glow)"><animate attributeName="opacity" values="0.2;0.9;0.2" dur="0.9s" repeatCount="indefinite"/></circle>
+              <circle cx="274" cy="41" r="2.5" fill="#e040fb" filter="url(#glow)"><animate attributeName="opacity" values="0.8;0.1;0.8" dur="1.2s" repeatCount="indefinite"/></circle>
+            </g>
+            <!-- VISOR -->
+            <rect x="164" y="154" width="192" height="34" rx="9" fill="url(#visorBg)" stroke="#7effd4" stroke-width="1.8" stroke-opacity="0.78"/>
+            <rect x="167" y="157" width="186" height="28" rx="7" fill="rgba(0,8,4,0.92)"/>
+            <rect x="167" y="157" width="42" height="28" rx="6" opacity="0.75" clip-path="url(#visorClip)"><animate attributeName="x" values="125;311;125" dur="2.8s" repeatCount="indefinite"/><animate attributeName="fill" values="#7effd4;#a78bfa;#7effd4" dur="2.8s" repeatCount="indefinite"/></rect>
+            <line x1="165" y1="156" x2="355" y2="156" stroke="url(#acG)" stroke-width="1.8" opacity="0.82"/>
+            <line x1="165" y1="187" x2="355" y2="187" stroke="url(#acG)" stroke-width="0.7" stroke-opacity="0.28"/>
+            <rect x="164" y="159" width="5" height="6" rx="1.5" fill="#7effd4" opacity="0.5"/>
+            <rect x="164" y="167" width="5" height="6" rx="1.5" fill="#7effd4" opacity="0.5"/>
+            <rect x="164" y="175" width="5" height="6" rx="1.5" fill="#7effd4" opacity="0.5"/>
+            <rect x="351" y="159" width="5" height="6" rx="1.5" fill="#a78bfa" opacity="0.5"/>
+            <rect x="351" y="167" width="5" height="6" rx="1.5" fill="#a78bfa" opacity="0.5"/>
+            <rect x="351" y="175" width="5" height="6" rx="1.5" fill="#a78bfa" opacity="0.5"/>
+            <!-- EYES -->
+            <rect x="183" y="159" width="66" height="26" rx="6" fill="rgba(0,0,0,0.88)" stroke="#7effd4" stroke-width="1.2" stroke-opacity="0.72"/>
+            <ellipse cx="216" cy="172" rx="24" ry="10" fill="rgba(126,255,212,0.1)"/>
+            <ellipse id="eyeL" cx="216" cy="172" rx="14" ry="10" fill="#7effd4" opacity="0.95" filter="url(#glow)"><animate attributeName="opacity" values="0.95;0.45;0.95" dur="3.1s" repeatCount="indefinite"/></ellipse>
+            <ellipse cx="216" cy="172" rx="6" ry="6" fill="white" opacity="0.88"><animate attributeName="opacity" values="0.88;0.28;0.88" dur="3.1s" repeatCount="indefinite"/></ellipse>
+            <line x1="216" y1="160" x2="216" y2="184" stroke="#7effd4" stroke-width="1" stroke-opacity="0.5"><animate attributeName="y1" values="160;184;160" dur="2.1s" repeatCount="indefinite"/><animate attributeName="y2" values="170;184;170" dur="2.1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.5;0.9;0.5" dur="2.1s" repeatCount="indefinite"/></line>
+            <rect x="271" y="159" width="66" height="26" rx="6" fill="rgba(0,0,0,0.88)" stroke="#a78bfa" stroke-width="1.2" stroke-opacity="0.72"/>
+            <ellipse cx="304" cy="172" rx="24" ry="10" fill="rgba(167,139,250,0.1)"/>
+            <ellipse id="eyeR" cx="304" cy="172" rx="14" ry="10" fill="#a78bfa" opacity="0.95" filter="url(#glow)"><animate attributeName="opacity" values="0.45;0.95;0.45" dur="3.1s" repeatCount="indefinite"/></ellipse>
+            <ellipse cx="304" cy="172" rx="6" ry="6" fill="white" opacity="0.88"><animate attributeName="opacity" values="0.28;0.88;0.28" dur="3.1s" repeatCount="indefinite"/></ellipse>
+            <line x1="304" y1="160" x2="304" y2="184" stroke="#a78bfa" stroke-width="1" stroke-opacity="0.5"><animate attributeName="y1" values="184;160;184" dur="2.1s" repeatCount="indefinite"/><animate attributeName="y2" values="184;170;184" dur="2.1s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.9;0.5;0.9" dur="2.1s" repeatCount="indefinite"/></line>
+            <!-- NOSE RIDGE -->
+            <path d="M253 196 L245 214 L260 209 L275 214 L267 196 Z" fill="url(#mg2)" stroke="#7effd4" stroke-width="0.6" stroke-opacity="0.28"/>
+            <line x1="260" y1="196" x2="260" y2="209" stroke="#7effd4" stroke-width="0.5" stroke-opacity="0.22"/>
+            <!-- JAW -->
+            <path d="M198 217 Q196 246 260 248 Q324 246 322 217 L318 204 L202 204 Z" fill="url(#mg2)" stroke="#7effd4" stroke-width="0.9" stroke-opacity="0.32"/>
+            <rect x="219" y="220" width="14" height="12" rx="3" fill="rgba(180,255,225,0.13)" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.42"/>
+            <rect x="235" y="220" width="14" height="15" rx="3" fill="rgba(180,255,225,0.13)" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.42"/>
+            <rect x="251" y="220" width="18" height="15" rx="3" fill="rgba(180,255,225,0.16)" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.48"/>
+            <rect x="271" y="220" width="14" height="15" rx="3" fill="rgba(180,255,225,0.13)" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.42"/>
+            <rect x="287" y="220" width="14" height="12" rx="3" fill="rgba(180,255,225,0.13)" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.42"/>
+            <rect x="213" y="238" width="94" height="4" rx="2" fill="url(#acG)" opacity="0.72" filter="url(#glow)"><animate attributeName="opacity" values="0.72;1;0.72" dur="1.6s" repeatCount="indefinite"/></rect>
+            <!-- CHEEKS -->
+            <path d="M186 194 L205 189 L203 212 L184 215 Z" fill="url(#mg3)" stroke="#7effd4" stroke-width="0.7" stroke-opacity="0.28"/>
+            <circle cx="192" cy="201" r="3.5" fill="#7effd4" opacity="0.6" filter="url(#glow)"><animate attributeName="opacity" values="0.6;1;0.6" dur="2.4s" repeatCount="indefinite"/></circle>
+            <path d="M334 194 L315 189 L317 212 L336 215 Z" fill="url(#mg3)" stroke="#a78bfa" stroke-width="0.7" stroke-opacity="0.28"/>
+            <circle cx="328" cy="201" r="3.5" fill="#a78bfa" opacity="0.6" filter="url(#glow)"><animate attributeName="opacity" values="1;0.6;1" dur="2.4s" repeatCount="indefinite"/></circle>
+            <!-- TEMPLE WIRES -->
+            <path d="M183 162 L172 169 L168 186 L174 203" fill="none" stroke="#7effd4" stroke-width="1.1" stroke-opacity="0.28" stroke-dasharray="4 3"/>
+            <circle cx="168" cy="186" r="2.5" fill="#7effd4" opacity="0.45"/>
+            <path d="M337 162 L348 169 L352 186 L346 203" fill="none" stroke="#a78bfa" stroke-width="1.1" stroke-opacity="0.28" stroke-dasharray="4 3"/>
+            <circle cx="352" cy="186" r="2.5" fill="#a78bfa" opacity="0.45"/>
+            <!-- head scan shimmer -->
+            <line x1="196" y1="108" x2="324" y2="108" stroke="url(#acG)" stroke-width="1.2" opacity="0"><animate attributeName="y1" values="106;240;106" dur="3.2s" repeatCount="indefinite"/><animate attributeName="y2" values="106;240;106" dur="3.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0.4;0" dur="3.2s" repeatCount="indefinite"/></line>
+          </g>
+
+        <!-- LEFT ARM -->
+          <g class="arm-left-g">
+            <ellipse cx="188" cy="276" rx="23" ry="17" fill="url(#mg2)" stroke="#7effd4" stroke-width="1.2" stroke-opacity="0.6"/>
+            <ellipse cx="188" cy="276" rx="10" ry="7" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.8" stroke-opacity="0.4"/>
+            <rect x="174" y="284" width="28" height="94" rx="9" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.9" stroke-opacity="0.35"/>
+            <rect x="178" y="300" width="20" height="3" rx="1.5" fill="#7effd4" opacity="0.28"/>
+            <rect x="178" y="312" width="20" height="2" rx="1" fill="#7effd4" opacity="0.18"/>
+            <rect x="178" y="322" width="20" height="2" rx="1" fill="#7effd4" opacity="0.18"/>
+            <ellipse cx="188" cy="378" rx="14" ry="11" fill="url(#mg2)" stroke="#7effd4" stroke-width="1" stroke-opacity="0.45"/>
+            <circle cx="188" cy="378" r="5" fill="#7effd4" opacity="0.32" filter="url(#glow)"/>
+            <rect x="176" y="387" width="24" height="78" rx="7" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.8" stroke-opacity="0.3"/>
+            <rect x="174" y="457" width="28" height="5" rx="2.5" fill="#7effd4" opacity="0.55" filter="url(#glow)"><animate attributeName="opacity" values="0.55;1;0.55" dur="2.2s" repeatCount="indefinite"/></rect>
+            <rect x="168" y="463" width="40" height="30" rx="6" fill="url(#mg2)" stroke="#7effd4" stroke-width="0.9" stroke-opacity="0.5"/>
+            <rect x="170" y="493" width="8" height="20" rx="4" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.6" stroke-opacity="0.3"/>
+            <rect x="180" y="493" width="8" height="22" rx="4" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.6" stroke-opacity="0.3"/>
+            <rect x="190" y="493" width="8" height="22" rx="4" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.6" stroke-opacity="0.3"/>
+            <rect x="200" y="493" width="7" height="18" rx="4" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.6" stroke-opacity="0.3"/>
+            <rect x="161" y="467" width="9" height="15" rx="4" fill="url(#mg1)" stroke="#7effd4" stroke-width="0.6" stroke-opacity="0.35" transform="rotate(-18,161,467)"/>
+          </g>
+          
+        <!-- RIGHT ARM -->
+          <g class="arm-right-g">
+            <ellipse cx="332" cy="276" rx="23" ry="17" fill="url(#mg2)" stroke="#a78bfa" stroke-width="1.2" stroke-opacity="0.6"/>
+            <ellipse cx="332" cy="276" rx="10" ry="7" fill="url(#mg1)" stroke="#a78bfa" stroke-width="0.8" stroke-opacity="0.4"/>
+            <rect x="318" y="284" width="28" height="94" rx="9" fill="url(#mg1)" stroke="#a78bfa" stroke-width="0.9" stroke-opacity="0.35"/>
+            <rect x="322" y="300" width="20" height="3" rx="1.5" fill="#a78bfa" opacity="0.28"/>
+            <rect x="322" y="312" width="20" height="2" rx="1" fill="#a78bfa" opacity="0.18"/>
+            <rect x="322" y="322" width="20" height="2" rx="1" fill="#a78bfa" opacity="0.18"/>
+            <ellipse cx="332" cy="378" rx="14" ry="11" fill="url(#mg2)" stroke="#a78bfa" stroke-width="1" stroke-opacity="0.45"/>
+            <circle cx="332" cy="378" r="5" fill="#a78bfa" opacity="0.32" filter="url(#glow)"/>
+            <rect x="320" y="387" width="24" height="78" rx="7" fill="url(#mg1)" stroke="#a78bfa" stroke-width="0.8" stroke-opacity="0.3"/>
+            <rect x="318" y="457" width="28" height="5" rx="2.5" fill="#a78bfa" opacity="0.55" filter="url(#glow)"><animate attributeName="opacity" values="1;0.55;1" dur="2.2s" repeatCount="indefinite"/></rect>
+            <rect x="312" y="463" width="40" height="30" rx="6" fill="url(#mg2)" stroke="#a78bfa" stroke-width="0.9" stroke-opacity="0.5"/>
+            <rect x="314" y="493" width="8" height="20" rx="4" fill="url(#mg1)" stroke="#a78bfa" stroke-width="0.6" stroke-opacity="0.3"/>
+            <rect x="324" y="493" width="8" height="22" rx="4" fill="url(#mg1)" stroke="#a78bfa" stroke-width="0.6" stroke-opacity="0.3"/>
+            <rect x="334" y="493" width="8" height="22" rx="4" fill="url(#mg1)" stroke="#a78bfa" stroke-width="0.6" stroke-opacity="0.3"/>
+            <rect x="344" y="493" width="7" height="18" rx="4" fill="url(#mg1)" stroke="#a78bfa" stroke-width="0.6" stroke-opacity="0.3"/>
+            <rect x="350" y="467" width="9" height="15" rx="4" fill="url(#mg1)" stroke="#a78bfa" stroke-width="0.6" stroke-opacity="0.35" transform="rotate(18,355,467)"/>
+          </g>
+          </g>
+        <!-- end robot-body-g -->
+        <!-- BG circuit decoration -->
+        <g opacity="0.18">
+          <path d="M46 215 L80 215 L80 305 L103 305 L103 390 L70 390" stroke="#7effd4" stroke-width="1.2" fill="none" stroke-dasharray="130" stroke-dashoffset="130"><animate attributeName="stroke-dashoffset" values="130;0;130" dur="4s" repeatCount="indefinite"/></path>
+          <circle cx="80" cy="215" r="3" fill="#7effd4"/><circle cx="103" cy="305" r="3" fill="#7effd4"/>
+          <path d="M474 235 L440 235 L440 315 L417 315 L417 405 L450 405" stroke="#a78bfa" stroke-width="1.2" fill="none" stroke-dasharray="130" stroke-dashoffset="130"><animate attributeName="stroke-dashoffset" values="130;0;130" dur="4s" begin="1.2s" repeatCount="indefinite"/></path>
+          <circle cx="440" cy="235" r="3" fill="#a78bfa"/><circle cx="417" cy="315" r="3" fill="#a78bfa"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- BRAND BAR -->
+<div class="brand-bar">
+  <div class="brand-bar-label">Güvenilen Entegrasyonlar & Teknolojiler</div>
+  <div class="brand-logos">
+    <span class="brand-logo">OpenAI</span><span class="brand-logo">Anthropic</span><span class="brand-logo">LangChain</span><span class="brand-logo">n8n</span><span class="brand-logo">Zapier</span><span class="brand-logo">HubSpot</span><span class="brand-logo">Salesforce</span><span class="brand-logo">Notion</span>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <div class="ticker-item"><span>◆</span>Veri Analizi</div><div class="ticker-item"><span>◆</span>Müşteri Desteği</div><div class="ticker-item"><span>◆</span>İçerik Üretimi</div><div class="ticker-item"><span>◆</span>Süreç Otomasyonu</div><div class="ticker-item"><span>◆</span>Pazar Araştırması</div><div class="ticker-item"><span>◆</span>E-posta Yönetimi</div><div class="ticker-item"><span>◆</span>Lead Generation</div><div class="ticker-item"><span>◆</span>CRM Entegrasyonu</div>
+    <div class="ticker-item"><span>◆</span>Veri Analizi</div><div class="ticker-item"><span>◆</span>Müşteri Desteği</div><div class="ticker-item"><span>◆</span>İçerik Üretimi</div><div class="ticker-item"><span>◆</span>Süreç Otomasyonu</div><div class="ticker-item"><span>◆</span>Pazar Araştırması</div><div class="ticker-item"><span>◆</span>E-posta Yönetimi</div><div class="ticker-item"><span>◆</span>Lead Generation</div><div class="ticker-item"><span>◆</span>CRM Entegrasyonu</div>
+  </div>
+</div>
+
+<!-- ===== AGENTS OVERVIEW ===== -->
+<section class="section" id="agents">
+  <div class="section-label reveal">AI Agent Portföyü</div>
+  <h2 class="section-title reveal">Her iş için <em>doğru agent</em></h2>
+  <p class="section-sub reveal">7 hazır agent çözümümüz var. Her biri belirli bir iş sorununu çözmek için tasarlandı. Aşağıda detaylı örnekleri inceleyebilirsiniz.</p>
+  <div class="agents-overview reveal">
+    <div class="ov-card featured-ov">
+      <div class="ov-badge">⚡ En Popüler</div>
+      <div class="ov-num">01</div>
+      <span class="ov-icon">🧠</span>
+      <div class="ov-name">DataMind Agent</div>
+      <p class="ov-short">Ham veriyi saniyeler içinde analiz eder, KPI raporları üretir ve anormallikleri tespit eder. Her sabah CEO'nuzun masasında hazır rapor.</p>
+      <a href="#dm-showcase" class="btn-ghost">Canlı Demo →</a>
+    </div>
+    <div class="ov-card">
+      <div class="ov-num">02</div>
+      <span class="ov-icon">💬</span>
+      <div class="ov-name">SupportBot Pro</div>
+      <p class="ov-short">7/24 müşteri sorularını yanıtlar, bilet açar, escalate eder. 20+ dil desteği.</p>
+      <a href="#sb-showcase" class="btn-ghost">Canlı Demo →</a>
+    </div>
+    <div class="ov-card">
+      <div class="ov-num">03</div>
+      <span class="ov-icon">✍️</span>
+      <div class="ov-name">ContentForge</div>
+      <p class="ov-short">Marka sesinizle SEO blog, sosyal medya ve e-posta kampanyaları üretir.</p>
+      <a href="#cf-showcase" class="btn-ghost">Canlı Demo →</a>
+    </div>
+    <div class="ov-card">
+      <div class="ov-num">04</div>
+      <span class="ov-icon">🔍</span>
+      <div class="ov-name">ResearchBot</div>
+      <p class="ov-short">Web'i tarar, rakip analizi yapar, dakikalar içinde pazar araştırması sunar.</p>
+      <a href="#rb-showcase" class="btn-ghost">Canlı Demo →</a>
+    </div>
+    <div class="ov-card">
+      <div class="ov-num">05</div>
+      <span class="ov-icon">⚙️</span>
+      <div class="ov-name">WorkflowAgent</div>
+      <p class="ov-short">Zapier, Make, N8N ile sistemler arası köprü kurar, iş akışlarını otomatikleştirir.</p>
+      <a href="#wf-showcase" class="btn-ghost">Canlı Demo →</a>
+    </div>
+    <div class="ov-card">
+      <div class="ov-num">06</div>
+      <span class="ov-icon">💼</span>
+      <div class="ov-name">SalesHunter</div>
+      <p class="ov-short">Lead bulur, nitelendirir ve kişiselleştirilmiş outreach e-postaları gönderir.</p>
+      <a href="#sh-showcase" class="btn-ghost">Canlı Demo →</a>
+    </div>
+    <div class="ov-card featured-ov">
+      <div class="ov-num">07</div>
+      <span class="ov-icon">🎤</span>
+      <div class="ov-name">ElevenLabs Sesli Asistan</div>
+      <p class="ov-short">Sesli komutlarla etkileşim kurar, doğal konuşma sentezi ile yanıtlar üretir. Çok dilli ses desteği.</p>
+      <a href="#el-showcase" class="btn-ghost">Canlı Demo →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SHOWCASE SECTION ===== -->
+<section class="showcase" id="showcase">
+
+  <!-- ── 01 DataMind ── -->
+  <div id="dm-showcase" class="showcase-header reveal">
+    <div class="showcase-header-inner">
+      <div class="sh-left">
+        <div class="sh-agent-id">Agent 01 — DataMind</div>
+        <h3 class="sh-title">Veriden karara:<br>Otomatik analiz & raporlama</h3>
+        <p class="sh-desc">DataMind Agent, belirlenen veri kaynaklarınızı (Excel, Google Sheets, SQL, API) düzenli aralıklarla okur; temizler, analiz eder ve formatlanmış raporlar üretir. İstisnaları tespit ettiğinde anında uyarı gönderir.</p>
+      </div>
+      <div class="sh-right">
+        <div class="sh-metrics-row">
+          <div class="sh-metric"><div class="sh-metric-val">96%</div><div class="sh-metric-label">Zaman Tasarrufu</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">8sn</div><div class="sh-metric-label">Rapor Süresi</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">0</div><div class="sh-metric-label">Manuel İşlem</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="demo-panel reveal">
+    <div class="demo-panel-tabs">
+      <button class="dp-tab active" onclick="switchTab('dm','report')">📊 Örnek Rapor</button>
+      <button class="dp-tab" onclick="switchTab('dm','terminal')">⌨ Agent Logu</button>
+      <button class="dp-tab" onclick="switchTab('dm','features')">✦ Özellikler</button>
+    </div>
+    <div class="demo-panel-body">
+      <div class="dp-pane active" id="dm-report">
+        <div class="report-preview">
+          <div class="rp-header">
+            <div class="rp-title">Haftalık Satış Performans Raporu</div>
+            <div class="rp-date">Oluşturulma: DataMind Agent · 08.03.2026 08:00</div>
+          </div>
+          <div class="rp-kpis">
+            <div class="rp-kpi"><div class="rp-kpi-val rp-kpi-up">₺2.4M</div><div class="rp-kpi-label">Toplam Ciro</div></div>
+            <div class="rp-kpi"><div class="rp-kpi-val rp-kpi-up">+18%</div><div class="rp-kpi-label">Geçen Haftaya Göre</div></div>
+            <div class="rp-kpi"><div class="rp-kpi-val">342</div><div class="rp-kpi-label">Yeni Sipariş</div></div>
+            <div class="rp-kpi"><div class="rp-kpi-val rp-kpi-down">-3%</div><div class="rp-kpi-label">Sepet Terk Oranı</div></div>
+          </div>
+          <div style="margin-bottom:8px;"><span style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;">Günlük Satış (Bu Hafta)</span></div>
+          <div class="rp-chart">
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div class="rp-bar" style="height:45%"></div><div class="rp-bar-label">Pzt</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div class="rp-bar" style="height:62%"></div><div class="rp-bar-label">Sal</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div class="rp-bar" style="height:55%"></div><div class="rp-bar-label">Çar</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div class="rp-bar" style="height:78%"></div><div class="rp-bar-label">Per</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div class="rp-bar" style="height:100%;border-top-color:var(--accent)"></div><div class="rp-bar-label">Cum</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div class="rp-bar" style="height:88%"></div><div class="rp-bar-label">Cmt</div></div>
+            <div style="display:flex;flex-direction:column;align-items:center;flex:1"><div class="rp-bar" style="height:70%"></div><div class="rp-bar-label">Paz</div></div>
+          </div>
+          <div class="rp-findings">
+            <div class="rp-finding"><div class="rp-finding-dot"></div>Cuma günü zirve satış tespit edildi (₺487K) — kampanya etkisi pozitif.</div>
+            <div class="rp-finding" style="border-left-color:var(--accent4)"><div class="rp-finding-dot" style="background:var(--accent4)"></div>Salı 14:00-16:00 arası dönüşüm oranı ortalamanın %22 altında — inceleme önerilir.</div>
+            <div class="rp-finding" style="border-left-color:var(--accent2)"><div class="rp-finding-dot" style="background:var(--accent2)"></div>Stok uyarısı: SKU-4421 ürünü 3 gün içinde tükenecek (12 adet kaldı).</div>
+          </div>
+        </div>
+      </div>
+      <div class="dp-pane" id="dm-terminal">
+        <div class="terminal" id="dm-log">
+          <div class="t-line"><span class="t-prompt">08:00:01</span><span class="t-out">▶ DataMind Agent başlatıldı</span></div>
+          <div class="t-line"><span class="t-prompt">08:00:02</span><span class="t-dim">→ Veri kaynakları bağlanıyor...</span></div>
+          <div class="t-line"><span class="t-prompt">08:00:03</span><span class="t-out">✓ Google Sheets bağlantısı kuruldu (3 sayfa)</span></div>
+          <div class="t-line"><span class="t-prompt">08:00:04</span><span class="t-out">✓ MySQL veritabanı bağlantısı kuruldu</span></div>
+          <div class="t-line"><span class="t-prompt">08:00:05</span><span class="t-dim">→ 2.847 satır veri işleniyor...</span></div>
+          <div class="t-line"><span class="t-prompt">08:00:06</span><span class="t-warn">⚠ 14 aykırı değer tespit edildi → temizlendi</span></div>
+          <div class="t-line"><span class="t-prompt">08:00:07</span><span class="t-out">✓ KPI hesaplamaları tamamlandı</span></div>
+          <div class="t-line"><span class="t-prompt">08:00:08</span><span class="t-warn">⚠ Anomali: SKU-4421 kritik stok seviyesi</span></div>
+          <div class="t-line"><span class="t-prompt">08:00:09</span><span class="t-out">✓ Rapor oluşturuldu → PDF + Slack bildirimi</span></div>
+          <div class="t-line"><span class="t-prompt">08:00:09</span><span class="t-out t-hi">✦ İşlem tamamlandı (8.3 saniye)</span></div>
+        </div>
+        <div class="terminal-run">
+          <input type="text" id="dm-cmd" placeholder="Komut girin: örn. 'Bu haftanın en çok satan ürünlerini listele'" onkeydown="if(event.key==='Enter')runDMCmd()">
+          <button class="run-btn" onclick="runDMCmd()">Çalıştır ▶</button>
+        </div>
+      </div>
+      <div class="dp-pane" id="dm-features">
+        <div class="features-list">
+          <div class="feature-item"><div class="fi-icon">📁</div><div><div class="fi-title">Çoklu Veri Kaynağı</div><div class="fi-desc">Excel, Google Sheets, MySQL, PostgreSQL, REST API ve CSV — hepsi tek panelden.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">⏰</div><div><div class="fi-title">Zamanlanmış Çalışma</div><div class="fi-desc">Günlük, haftalık veya gerçek zamanlı — istediğiniz sıklıkta otomatik çalışır.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🔔</div><div><div class="fi-title">Anomali Uyarıları</div><div class="fi-desc">Stok kritik seviye, satış düşüşü veya bütçe aşımı gibi durumlarda anında bildirim.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">📤</div><div><div class="fi-title">Çoklu Çıktı Formatı</div><div class="fi-desc">PDF rapor, Slack mesajı, e-posta özeti veya dashboard widget olarak teslim.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🔒</div><div><div class="fi-title">Güvenli Bağlantı</div><div class="fi-desc">Tüm veriler şifreli aktarılır, KVKK uyumlu altyapı ile çalışır.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🌐</div><div><div class="fi-title">Doğal Dil Sorgulama</div><div class="fi-desc">"Bu çeyreğin en kârlı ürününü bul" gibi Türkçe komutlarla anında analiz.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="showcase-divider"></div>
+
+  <!-- ── 02 SupportBot ── -->
+  <div id="sb-showcase" class="showcase-header reveal">
+    <div class="showcase-header-inner">
+      <div class="sh-left">
+        <div class="sh-agent-id">Agent 02 — SupportBot Pro</div>
+        <h3 class="sh-title">7/24 müşteri desteği,<br>sıfır bekleme süresi</h3>
+        <p class="sh-desc">SupportBot Pro, müşteri sorularını anlar, mevcut bilgi tabanınızdan yanıt üretir. Çözemediği durumları insan temsilciye aktarır. CRM'inize otomatik bilet açar, müşteri geçmişini takip eder.</p>
+      </div>
+      <div class="sh-right">
+        <div class="sh-metrics-row">
+          <div class="sh-metric"><div class="sh-metric-val">1.2sn</div><div class="sh-metric-label">Ortalama Yanıt</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">87%</div><div class="sh-metric-label">Çözüm Oranı</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">20+</div><div class="sh-metric-label">Dil Desteği</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="demo-panel reveal">
+    <div class="demo-panel-tabs">
+      <button class="dp-tab active" onclick="switchTab('sb','chat')">💬 Canlı Sohbet</button>
+      <button class="dp-tab" onclick="switchTab('sb','features')">✦ Özellikler</button>
+    </div>
+    <div class="demo-panel-body">
+      <div class="dp-pane active" id="sb-chat">
+        <div class="chat-window" id="chat-window">
+          <div class="chat-msg bot"><div class="chat-bubble">Merhaba! 👋 Size nasıl yardımcı olabilirim? Sipariş takibi, iade, ürün bilgisi veya teknik destek konularında yardım edebilirim.</div><div class="chat-meta">SupportBot · Şimdi</div></div>
+          <div class="chat-msg user"><div class="chat-bubble">Siparişim 3 gündür kargoya verilmedi, ne zaman gelecek?</div><div class="chat-meta">Siz · 14:23</div></div>
+          <div class="chat-msg bot"><div class="chat-bubble">Sipariş numaranızı paylaşır mısınız? Sistemi anında kontrol edip size kesin bilgi vereyim. 📦</div><div class="chat-meta">SupportBot · 14:23</div></div>
+          <div class="chat-msg user"><div class="chat-bubble">NF-2024-8847</div><div class="chat-meta">Siz · 14:24</div></div>
+          <div class="chat-msg bot"><div class="chat-bubble">Siparişinizi buldum ✓<br><br>📦 <strong>NF-2024-8847</strong><br>Durum: Depoda hazırlanıyor<br>Tahmini kargo: Bugün 17:00'ye kadar<br>Teslimat: Yarın veya öbür gün<br><br>Kargo çıkışında SMS ile bilgilendirileceğsiniz. Başka bir konuda yardımcı olabilir miyim?</div><div class="chat-meta">SupportBot · 14:24</div></div>
+        </div>
+        <div class="chat-input-row">
+          <input type="text" id="chat-input" placeholder="Mesajınızı yazın..." onkeydown="if(event.key==='Enter')sendChat()">
+          <button class="chat-send" onclick="sendChat()">➤</button>
+        </div>
+      </div>
+      <div class="dp-pane" id="sb-features">
+        <div class="features-list">
+          <div class="feature-item"><div class="fi-icon">🧠</div><div><div class="fi-title">Bilgi Tabanı Entegrasyonu</div><div class="fi-desc">FAQ, dökümanlar ve geçmiş biletlerden öğrenir, her gün daha akıllı hale gelir.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🎫</div><div><div class="fi-title">Otomatik Bilet Açma</div><div class="fi-desc">Çözülemeyen sorunlar için Zendesk, Freshdesk veya HubSpot'a otomatik bilet oluşturur.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🌍</div><div><div class="fi-title">Çok Dil Desteği</div><div class="fi-desc">Türkçe, İngilizce, Almanca, Arapça dahil 20+ dilde akıcı iletişim kurar.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">📊</div><div><div class="fi-title">Duygu Analizi</div><div class="fi-desc">Sinirli müşterileri tespit eder, öncelikli sıraya alır ve insan temsilciye yönlendirir.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🔗</div><div><div class="fi-title">Kanal Bağımsız</div><div class="fi-desc">Web sitesi chat, WhatsApp, Instagram DM, e-posta — tek agent, tüm kanallar.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">📈</div><div><div class="fi-title">Haftalık Analiz Raporu</div><div class="fi-desc">En sık sorulan sorular, çözüm oranı ve müşteri memnuniyeti skoru otomatik raporlanır.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="showcase-divider"></div>
+
+  <!-- ── 03 ContentForge ── -->
+  <div id="cf-showcase" class="showcase-header reveal">
+    <div class="showcase-header-inner">
+      <div class="sh-left">
+        <div class="sh-agent-id">Agent 03 — ContentForge</div>
+        <h3 class="sh-title">Marka sesinizle<br>ölçeklenebilir içerik</h3>
+        <p class="sh-desc">ContentForge, marka kimliğinizi öğrenir ve SEO uyumlu blog yazıları, sosyal medya paylaşımları, e-posta kampanyaları üretir. Anahtar kelime araştırması ve rakip analizi dahil.</p>
+      </div>
+      <div class="sh-right">
+        <div class="sh-metrics-row">
+          <div class="sh-metric"><div class="sh-metric-val">80+</div><div class="sh-metric-label">Aylık İçerik</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">+220%</div><div class="sh-metric-label">SEO Trafiği</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">3dk</div><div class="sh-metric-label">/Makale</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="demo-panel reveal">
+    <div class="demo-panel-tabs">
+      <button class="dp-tab active" onclick="switchTab('cf','output')">📝 Örnek Çıktı</button>
+      <button class="dp-tab" onclick="switchTab('cf','terminal')">⌨ Üretim Logu</button>
+      <button class="dp-tab" onclick="switchTab('cf','features')">✦ Özellikler</button>
+    </div>
+    <div class="demo-panel-body">
+      <div class="dp-pane active" id="cf-output">
+        <div class="report-preview">
+          <div class="rp-header">
+            <div class="rp-title">Blog Yazısı — ContentForge Çıktısı</div>
+            <div class="rp-date">Konu: "AI Otomasyon" · SEO Skoru: 94/100</div>
+          </div>
+          <div style="margin-bottom:20px;">
+            <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Meta Başlık</div>
+            <div style="font-size:1rem;font-weight:700;color:var(--accent);">AI Otomasyon ile İş Süreçlerinizi Nasıl Dönüştürürsünüz? [2026 Rehberi]</div>
+          </div>
+          <div style="margin-bottom:20px;">
+            <div style="font-family:'DM Mono',monospace;font-size:0.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Giriş Paragrafı</div>
+            <p style="font-size:0.88rem;color:var(--muted);line-height:1.75;">Günde kaç saat tekrar eden görevlere harcıyorsunuz? Araştırmalar, ortalama bir çalışanın zamanının <span style="color:var(--accent);">%40'ını</span> manuel, tekrar eden işlere ayırdığını gösteriyor. AI otomasyon teknolojisi, bu süreyi sıfıra yakın seviyelere çekmeyi mümkün kılıyor...</p>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <div style="font-family:'DM Mono',monospace;font-size:0.6rem;padding:4px 10px;border:1px solid rgba(126,255,212,0.2);color:var(--accent);">ai otomasyon</div>
+            <div style="font-family:'DM Mono',monospace;font-size:0.6rem;padding:4px 10px;border:1px solid rgba(126,255,212,0.2);color:var(--accent);">iş süreç otomasyonu</div>
+            <div style="font-family:'DM Mono',monospace;font-size:0.6rem;padding:4px 10px;border:1px solid rgba(126,255,212,0.2);color:var(--accent);">yapay zeka agent</div>
+            <div style="font-family:'DM Mono',monospace;font-size:0.6rem;padding:4px 10px;border:1px solid rgba(126,255,212,0.2);color:var(--accent);">verimlilik artırma</div>
+          </div>
+        </div>
+      </div>
+      <div class="dp-pane" id="cf-terminal">
+        <div class="terminal">
+          <div class="t-line"><span class="t-prompt">13:05:01</span><span class="t-out">▶ ContentForge başlatıldı</span></div>
+          <div class="t-line"><span class="t-prompt">13:05:02</span><span class="t-dim">→ Marka sesi profili yükleniyor...</span></div>
+          <div class="t-line"><span class="t-prompt">13:05:03</span><span class="t-out">✓ 47 geçmiş içerik analiz edildi</span></div>
+          <div class="t-line"><span class="t-prompt">13:05:04</span><span class="t-dim">→ Anahtar kelime araştırması yapılıyor...</span></div>
+          <div class="t-line"><span class="t-prompt">13:05:06</span><span class="t-out">✓ 12 hedef anahtar kelime belirlendi</span></div>
+          <div class="t-line"><span class="t-prompt">13:05:07</span><span class="t-dim">→ Rakip içerikleri analiz ediliyor (Top 10 SERP)...</span></div>
+          <div class="t-line"><span class="t-prompt">13:05:09</span><span class="t-out">✓ İçerik taslağı oluşturuldu (8 bölüm)</span></div>
+          <div class="t-line"><span class="t-prompt">13:05:11</span><span class="t-out">✓ 1.847 kelime yazıldı</span></div>
+          <div class="t-line"><span class="t-prompt">13:05:12</span><span class="t-out">✓ SEO skoru: 94/100</span></div>
+          <div class="t-line"><span class="t-prompt">13:05:12</span><span class="t-out t-hi">✦ İçerik CMS'e yüklendi, yayına hazır.</span></div>
+        </div>
+      </div>
+      <div class="dp-pane" id="cf-features">
+        <div class="features-list">
+          <div class="feature-item"><div class="fi-icon">🎨</div><div><div class="fi-title">Marka Sesi Öğrenimi</div><div class="fi-desc">Mevcut içeriklerinizi analiz ederek ton, stil ve terminolojinizi öğrenir.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🔎</div><div><div class="fi-title">SEO Optimizasyonu</div><div class="fi-desc">Anahtar kelime yoğunluğu, meta etiketler, başlık hiyerarşisi otomatik optimize edilir.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">📱</div><div><div class="fi-title">Çok Format Desteği</div><div class="fi-desc">Blog, LinkedIn post, Twitter thread, e-posta, ürün açıklaması — tek prompt ile.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🔄</div><div><div class="fi-title">İçerik Takvimi</div><div class="fi-desc">Aylık içerik planınıza göre otomatik üretim ve doğrudan CMS'e yükleme.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🌐</div><div><div class="fi-title">Çok Dil İçerik</div><div class="fi-desc">Türkçe içeriği İngilizce, Almanca, Fransızca'ya yerelleştirerek çevirir.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">📊</div><div><div class="fi-title">Performans Takibi</div><div class="fi-desc">Üretilen içeriklerin trafik, sıralama ve dönüşüm verilerini Google Analytics ile raporlar.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="showcase-divider"></div>
+
+  <!-- ── 05 WorkflowAgent ── -->
+  <div id="wf-showcase" class="showcase-header reveal">
+    <div class="showcase-header-inner">
+      <div class="sh-left">
+        <div class="sh-agent-id">Agent 05 — WorkflowAgent</div>
+        <h3 class="sh-title">Sistemler arası<br>sonsuz otomasyon</h3>
+        <p class="sh-desc">WorkflowAgent, farklı yazılım ve servislerinizi birbirine bağlar. Bir form dolduğunda CRM'e kaydet, Slack'e bildir, fatura oluştur — tüm bunlar otomatik, dakikalar içinde.</p>
+      </div>
+      <div class="sh-right">
+        <div class="sh-metrics-row">
+          <div class="sh-metric"><div class="sh-metric-val">200+</div><div class="sh-metric-label">Entegrasyon</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">0</div><div class="sh-metric-label">Kod Gerektirmez</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">∞</div><div class="sh-metric-label">Ölçeklenir</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="demo-panel reveal">
+    <div class="demo-panel-tabs">
+      <button class="dp-tab active" onclick="switchTab('wf','diagram')">⚙ Örnek Akış</button>
+      <button class="dp-tab" onclick="switchTab('wf','features')">✦ Özellikler</button>
+    </div>
+    <div class="demo-panel-body">
+      <div class="dp-pane active" id="wf-diagram">
+        <p style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:20px;">Örnek Akış: Yeni Lead → Satış Süreci</p>
+        <div class="workflow-diagram">
+          <div class="wf-step"><div class="wf-box active-wf"><div class="wf-icon">📋</div><div class="wf-label">Form<br>Dolduruldu</div></div></div>
+          <div class="wf-arrow">→</div>
+          <div class="wf-step"><div class="wf-box active-wf"><div class="wf-icon">🧠</div><div class="wf-label">AI Lead<br>Nitelendirme</div></div></div>
+          <div class="wf-arrow">→</div>
+          <div class="wf-step"><div class="wf-box active-wf"><div class="wf-icon">💾</div><div class="wf-label">CRM'e<br>Kaydet</div></div></div>
+          <div class="wf-arrow">→</div>
+          <div class="wf-step"><div class="wf-box active-wf"><div class="wf-icon">📧</div><div class="wf-label">Karşılama<br>E-postası</div></div></div>
+          <div class="wf-arrow">→</div>
+          <div class="wf-step"><div class="wf-box active-wf"><div class="wf-icon">💬</div><div class="wf-label">Slack<br>Bildirimi</div></div></div>
+          <div class="wf-arrow">→</div>
+          <div class="wf-step"><div class="wf-box"><div class="wf-icon">📅</div><div class="wf-label">Toplantı<br>Planla</div></div></div>
+          <div class="wf-arrow">→</div>
+          <div class="wf-step"><div class="wf-box"><div class="wf-icon">🧾</div><div class="wf-label">Teklif<br>Hazırla</div></div></div>
+        </div>
+        <div style="margin-top:24px;padding:16px;background:rgba(126,255,212,0.05);border:1px solid rgba(126,255,212,0.12);">
+          <p style="font-size:0.85rem;color:var(--muted);line-height:1.65;">Bu akış <span style="color:var(--accent);">tamamen otomatik</span> çalışır. Form dolduğu andan teklif hazırlanmasına kadar geçen süre: <span style="color:var(--accent);font-weight:700;">ortalama 4 dakika</span>. İnsan müdahalesi: sadece telefon görüşmesi.</p>
+        </div>
+      </div>
+      <div class="dp-pane" id="wf-features">
+        <div class="features-list">
+          <div class="feature-item"><div class="fi-icon">🔌</div><div><div class="fi-title">200+ Uygulama</div><div class="fi-desc">Slack, Gmail, HubSpot, Notion, Airtable, Stripe, Shopify ve daha fazlası.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🔀</div><div><div class="fi-title">Koşullu Dallanma</div><div class="fi-desc">Eğer A ise X yap, eğer B ise Y yap — karmaşık iş kurallarını kodlamadan tanımlayın.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">⚡</div><div><div class="fi-title">Gerçek Zamanlı Tetikleyici</div><div class="fi-desc">Webhook, e-posta, form veya zamanlama bazlı anında tetiklenme.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🔁</div><div><div class="fi-title">Hata Yönetimi</div><div class="fi-desc">Başarısız adımlar otomatik yeniden denenir, kritik hatalar Slack'e bildirilir.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">📋</div><div><div class="fi-title">Denetim Kaydı</div><div class="fi-desc">Her adım loglanır, kim ne zaman ne yaptı — tam şeffaflık.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🧪</div><div><div class="fi-title">Test Modu</div><div class="fi-desc">Canlıya almadan önce gerçek veriyle test edin, her adımı adım adım doğrulayın.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="showcase-divider"></div>
+
+  <!-- ── 06 SalesHunter ── -->
+  <div id="sh-showcase" class="showcase-header reveal">
+    <div class="showcase-header-inner">
+      <div class="sh-left">
+        <div class="sh-agent-id">Agent 06 — SalesHunter</div>
+        <h3 class="sh-title">Aylık 200+ nitelikli lead,<br>sıfır soğuk arama</h3>
+        <p class="sh-desc">SalesHunter, LinkedIn ve web'den ideal müşteri profilinize uyan şirketleri bulur, karar vericileri belirler, kişiselleştirilmiş outreach e-postaları yazar ve gönderir. CRM'inize otomatik kaydeder.</p>
+      </div>
+      <div class="sh-right">
+        <div class="sh-metrics-row">
+          <div class="sh-metric"><div class="sh-metric-val">200+</div><div class="sh-metric-label">Aylık Lead</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">34%</div><div class="sh-metric-label">Açılma Oranı</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">12%</div><div class="sh-metric-label">Yanıt Oranı</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="demo-panel reveal">
+    <div class="demo-panel-tabs">
+      <button class="dp-tab active" onclick="switchTab('sh','leads')">👤 Örnek Leadler</button>
+      <button class="dp-tab" onclick="switchTab('sh','email')">📧 Örnek E-posta</button>
+      <button class="dp-tab" onclick="switchTab('sh','features')">✦ Özellikler</button>
+    </div>
+    <div class="demo-panel-body">
+      <div class="dp-pane active" id="sh-leads">
+        <p style="font-family:'DM Mono',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;">Bu hafta bulunan leadler (ICP: B2B SaaS, 50-200 çalışan, İstanbul)</p>
+        <div class="lead-cards">
+          <div class="lead-card"><div class="lc-left"><div class="lc-avatar" style="background:linear-gradient(135deg,#7effd4,#2dd4a0);">AY</div><div><div class="lc-name">Ahmet Yılmaz</div><div class="lc-company">Pazarlama Müdürü · TechCo Istanbul · 120 çalışan</div></div></div><div class="lc-score"><div class="lc-score-num">92 / 100</div><div class="lc-score-bar"><div class="lc-score-fill" style="width:92%"></div></div></div></div>
+          <div class="lead-card"><div class="lc-left"><div class="lc-avatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);">BK</div><div><div class="lc-name">Büşra Kaya</div><div class="lc-company">CEO · DataFlow TR · 85 çalışan</div></div></div><div class="lc-score"><div class="lc-score-num">88 / 100</div><div class="lc-score-bar"><div class="lc-score-fill" style="width:88%"></div></div></div></div>
+          <div class="lead-card"><div class="lc-left"><div class="lc-avatar" style="background:linear-gradient(135deg,#fb923c,#f97316);">MÖ</div><div><div class="lc-name">Mert Öztürk</div><div class="lc-company">CTO · CloudBase · 67 çalışan</div></div></div><div class="lc-score"><div class="lc-score-num">81 / 100</div><div class="lc-score-bar"><div class="lc-score-fill" style="width:81%"></div></div></div></div>
+          <div class="lead-card"><div class="lc-left"><div class="lc-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);">ZA</div><div><div class="lc-name">Zeynep Arslan</div><div class="lc-company">Growth Lead · ScaleUp HQ · 150 çalışan</div></div></div><div class="lc-score"><div class="lc-score-num">77 / 100</div><div class="lc-score-bar"><div class="lc-score-fill" style="width:77%"></div></div></div></div>
+        </div>
+      </div>
+      <div class="dp-pane" id="sh-email">
+        <div class="email-preview">
+          <div class="ep-header">
+            <div class="ep-field"><span class="ep-field-label">Kime:</span><span class="ep-field-val"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1f7e77727a6b31667673727e655f6b7a7c777c70317c7072">[email&#160;protected]</a></span></div>
+            <div class="ep-field"><span class="ep-field-label">Konu:</span><span class="ep-field-val" style="color:var(--accent);">TechCo'nun pazarlama süreçlerini nasıl otomatikleştirebilirsiniz?</span></div>
+            <div class="ep-field"><span class="ep-field-label">Gönderen:</span><span class="ep-field-val">SalesHunter Agent · NeuralForge</span></div>
+          </div>
+          <div class="ep-body">
+            Merhaba <span class="ep-hi">Ahmet Bey</span>,<br><br>
+            <span class="ep-hi">TechCo'nun</span> son çeyrekte B2B segment büyümesini %40 artırdığını LinkedIn'de gördüm — tebrikler! Bu hızlı büyüme sürecinde pazarlama operasyonlarının ayak uydurması ciddi bir zorluk olabiliyor.<br><br>
+            NeuralForge olarak <span class="ep-hi">120 çalışanlı SaaS şirketlere</span> özel AI agent çözümleri sunuyoruz. Benzer profildeki müşterimiz <strong>DataFlow TR</strong>'de lead nurturing sürecini tamamen otomatikleştirdik — satış ekibi artık sadece hazır fırsatlara odaklanıyor.<br><br>
+            <span class="ep-hi">Bu hafta 20 dakikanız</span> var mı? Ahmet Bey'in tam ihtiyacına göre bir demo hazırlamak isterim.<br><br>
+            İyi çalışmalar,<br>
+            <span style="color:var(--accent);">NeuralForge Ekibi</span>
+          </div>
+        </div>
+      </div>
+      <div class="dp-pane" id="sh-features">
+        <div class="features-list">
+          <div class="feature-item"><div class="fi-icon">🎯</div><div><div class="fi-title">ICP Tanımı</div><div class="fi-desc">Sektör, şirket büyüklüğü, lokasyon ve pozisyona göre ideal müşteri profili tanımlayın.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🔗</div><div><div class="fi-title">LinkedIn & Web Tarama</div><div class="fi-desc">Güncel şirket ve yönetici bilgilerini LinkedIn, web siteleri ve haberlerden toplar.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">✉️</div><div><div class="fi-title">Kişiselleştirilmiş Outreach</div><div class="fi-desc">Her lead için şirket haberlerini, büyüme verilerini ve ağrı noktalarını kullanarak özgün e-posta yazar.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">📬</div><div><div class="fi-title">Follow-up Dizisi</div><div class="fi-desc">Yanıt gelmediğinde 3, 7 ve 14. günlerde otomatik takip e-postaları gönderir.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">💾</div><div><div class="fi-title">CRM Entegrasyonu</div><div class="fi-desc">Tüm leadler, etkileşimler ve yanıtlar HubSpot veya Salesforce'a otomatik kaydedilir.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">📈</div><div><div class="fi-title">A/B Test</div><div class="fi-desc">Farklı konu satırları ve mesajları test eder, en yüksek açılma oranını otomatik seçer.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section><!-- end showcase -->
+
+<!-- ===== PROCESS ===== -->
+<section class="process" id="how">
+  <div class="section-label reveal">Süreç</div>
+  <h2 class="section-title reveal">4 adımda<br><em>aktif agent</em></h2>
+  <div class="process-steps reveal">
+    <div class="step"><div class="step-num">01</div><div class="step-title">Analiz</div><p class="step-desc">İş süreçlerinizi ve ihtiyaçlarınızı detaylıca analiz ediyoruz. Hangi görevlerin otomasyona uygun olduğunu belirliyoruz.</p></div>
+    <div class="step"><div class="step-num">02</div><div class="step-title">Tasarım</div><p class="step-desc">İhtiyaçlarınıza özel agent mimarisini tasarlıyoruz. Entegrasyon noktalarını ve iş akışını planlıyoruz.</p></div>
+    <div class="step"><div class="step-num">03</div><div class="step-title">Geliştirme</div><p class="step-desc">Agent'ı mevcut sistemlerinize entegre edecek şekilde geliştiriyoruz. Test süreçleriyle kaliteyi garantiliyoruz.</p></div>
+    <div class="step"><div class="step-num">04</div><div class="step-title">Yayın & Destek</div><p class="step-desc">Agent'ı canlıya alıyor, performansı izliyor ve sürekli iyileştirmeler yapıyoruz. Yanınızdayız.</p></div>
+  </div>
+</section>
+
+<!-- ===== SSS / FAQ ===== -->
+<section class="faq-section" id="faq">
+  <div class="section-label reveal">Sıkça Sorulanlar</div>
+  <h2 class="section-title reveal">Merak ettiğiniz her <em>şey</em> burada</h2>
+  <p class="section-sub reveal">Hâlâ cevaplanmayan sorunuz mu var? Demo görüşmesinde doğrudan ekibimize sorabilirsiniz.</p>
+  <div class="faq-list reveal">
+    <div class="faq-item open">
+      <div class="faq-q" onclick="toggleFaq(this)">AI agent tam olarak ne işe yarar ve geleneksel otomasyon araçlarından farkı nedir? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Geleneksel otomasyon araçları (Zapier, Make vb.) sabit kurallar uygular. AI agent'lar ise <strong>bağlamı anlayarak karar verir</strong>: bir e-postanın ne zaman eskalasyon gerektirdiğini, hangi rapor anomalisinin kritik olduğunu veya bir lead'in ne kadar nitelikli olduğunu değerlendirebilir. Karmaşık, değişken iş akışları için çok daha güçlüdür.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Mevcut sistemlerimize entegrasyon ne kadar sürer? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Standart entegrasyonlar (Gmail, HubSpot, Slack, Notion, Shopify, Google Sheets, SQL) için <strong>1-2 hafta</strong> yeterlidir. Özel API entegrasyonları gerektiren karmaşık senaryolarda bu süre 3-4 haftaya uzayabilir. Her projede önce bir analiz görüşmesi yaparak net takvim paylaşıyoruz.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Verilerim güvende mi? KVKK uyumluluğu nasıl sağlanıyor? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Tüm veri transferleri <strong>TLS 1.3 şifrelemesi</strong> ile gerçekleşir. Müşteri verileri yalnızca işlem süresince işlenir, saklanmaz. Türkiye ağırlıklı projeler için yerel sunucu seçeneği sunuyoruz. KVKK Madde 12 kapsamındaki teknik ve idari tedbirlerin tamamı uygulanmaktadır.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Herhangi bir teknik bilgiye veya geliştirici ekibine ihtiyacım var mı? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner"><strong>Hayır.</strong> Agent'ları kurar, yapılandırır ve yönetiyoruz. Sizin tarafınızda sadece iş süreçlerinizi bilen bir kişi yeterli. Kurulum sonrası basit bir dashboard üzerinden agent durumunu takip edebilirsiniz; teknik bilgi gerektirmez.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Fiyatlandırma nasıl işliyor? Sabit abonelik mi, kullanım bazlı mı? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">İki model sunuyoruz: <strong>Aylık sabit ücret</strong> (öngörülebilir bütçe için) veya <strong>işlem bazlı fiyatlandırma</strong> (düşük hacimli projelerde avantajlı). Her proje için analiz görüşmesinde en uygun modeli birlikte belirliyoruz. İlk görüşme her zaman ücretsiz.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Agent çalışmayı durdurursa veya hata yaparsa ne olur? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Tüm agent'larda <strong>otomatik hata izleme ve bildirim</strong> sistemi kurulur. Kritik bir hata durumunda önce Slack/e-posta ile uyarı gönderilir, agent güvenli moda geçer (insan onayı bekler). Çalışma saatlerimizde müdahale 2 saat, hafta sonu SLA'mız 4 saattir.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Kaç agent aynı anda çalışabilir? Ölçekleme nasıl yapılıyor? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">Altyapımız <strong>paralel çalışma</strong> destekler. Örneğin SalesHunter aynı anda 500+ lead'i tarayabilir, SupportBot eş zamanlı yüzlerce konuşmayı yönetebilir. Yük artışlarında otomatik ölçekleme yapılır, ek kurulum gerektirmez.</div></div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Demo görüşmesi nasıl işliyor? Ne gibi hazırlık yapmam gerekir? <span class="faq-icon">+</span></div>
+      <div class="faq-a"><div class="faq-a-inner">30 dakikalık <strong>ücretsiz keşif görüşmesi</strong>nde iş süreçlerinizi dinliyoruz. Hazırlık gerekmez; sadece şu soruyu düşünün: "Şu an en çok hangi tekrar eden görev zaman kaybettiriyor?" Bu görüşmeden size özel bir otomasyon haritası çıkarıyoruz.</div></div>
+    </div>
+  </div>
+  <div class="pricing-bar reveal">
+    <div class="pricing-bar-text">
+      <h3>Sorunuzun cevabını bulamadınız mı?</h3>
+      <p>Ekibimiz her gün 09:00–18:00 arası sorularınızı yanıtlamaya hazır. Demo görüşmesinde her şeyi konuşabiliriz.</p>
+    </div>
+    <button class="btn-primary" onclick="openModal()">Ücretsiz Görüşme Ayarla <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="testimonials" id="testimonials">
+  <div class="section-label reveal">Referanslar</div>
+  <h2 class="section-title reveal">Müşterilerimiz<br><em>ne diyor?</em></h2>
+  <div class="testi-grid reveal">
+    <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">DataMind Agent, haftalık raporlama sürecimizi 8 saatten 15 dakikaya indirdi. Takımımız artık analiz yerine stratejiye zaman ayırabiliyor.</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#a78bfa,#7c3aed);">AK</div><div><div class="testi-name">Ahmet Kaya</div><div class="testi-role">CTO — TechStartup Istanbul</div></div></div></div>
+    <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">SupportBot'u devreye aldıktan sonra müşteri memnuniyet skorumuz %34 arttı. Gece yarısı gelen sorular bile anında yanıt alıyor.</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#fb923c,#f97316);">SY</div><div><div class="testi-name">Selin Yıldız</div><div class="testi-role">CEO — Moda E-ticaret</div></div></div></div>
+    <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">ContentForge ile ayda 80+ makale üretiyoruz. SEO trafiğimiz 3 ayda %220 arttı. ROI'yi hesaplamak bile zor artık.</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#7effd4,#2dd4a0);">MO</div><div><div class="testi-name">Mert Özdemir</div><div class="testi-role">Dijital Pazarlama Direktörü</div></div></div></div>
+    <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-quote">SalesHunter bize aylık 200+ nitelikli lead getiriyor. Satış ekibimiz artık soğuk arama yerine hazır fırsatları kapıyor.</p><div class="testi-author"><div class="testi-avatar" style="background:linear-gradient(135deg,#f472b6,#ec4899);">DÇ</div><div><div class="testi-name">Deniz Çelik</div><div class="testi-role">Satış Müdürü — B2B SaaS</div></div></div></div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-section">
+  <div class="cta-grid-bg"></div><div class="cta-glow"></div>
+  <h2 class="cta-title reveal">Hazır mısınız<br><em>otomasyon</em><br>çağına?</h2>
+  <p class="cta-sub reveal">İlk keşif görüşmesi ücretsiz. İş süreçlerinizi analiz edelim, size en uygun agent çözümünü birlikte tasarlayalım.</p>
+  <div class="reveal" style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;position:relative;z-index:1;">
+    <button class="btn-primary" onclick="openModal()">Ücretsiz Keşif Görüşmesi <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    <a href="#showcase" class="btn-secondary">Örneklere Dön</a>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand"><div class="footer-brand-name"><div class="nav-logo-dot"></div>NEURALFORGE</div><p class="footer-brand-desc">Otonom AI agent'lar ile iş süreçlerinizi dönüştürüyoruz. Her agent, sizin işinize özel tasarlanır.</p></div>
+    <div class="footer-col"><h4>Çözümler</h4><ul><li><a href="#dm-showcase">DataMind Agent</a></li><li><a href="#sb-showcase">SupportBot Pro</a></li><li><a href="#cf-showcase">ContentForge</a></li><li><a href="#wf-showcase">WorkflowAgent</a></li><li><a href="#sh-showcase">SalesHunter</a></li></ul></div>
+    <div class="footer-col"><h4>Şirket</h4><ul><li><a href="#faq">SSS</a></li><li><a href="#how">Nasıl Çalışır</a></li><li><a href="#testimonials">Referanslar</a></li><li><a href="#" onclick="openModal();return false;">Demo Talep Et</a></li></ul></div>
+    <div class="footer-col"><h4>İletişim</h4><ul><li><a href="/cdn-cgi/l/email-protection#9af2fff6f6f5daf4ffefe8fbf6fbf3fcf5e8fdffb4f9f5f7"><span class="__cf_email__" data-cfemail="355d5059595a755b5040475459545c535a4752501b565a58">[email&#160;protected]</span></a></li><li><a href="#">LinkedIn</a></li><li><a href="#">X / Twitter</a></li><li><a href="#">Instagram</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 NeuralForge. Tüm hakları saklıdır.</div>
+    <div class="footer-bottom-links"><a href="#">Gizlilik</a><a href="#">Koşullar</a><a href="#">KVKK</a></div>
+  </div>
+</footer>
+
+<script>
+/* HAMBURGER MENU */
+function toggleMobile(){
+  const m=document.getElementById('mobileMenu');
+  const h=document.getElementById('hamburger');
+  m.classList.toggle('open');
+  h.classList.toggle('open');
+  document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+}
+function closeMobile(){
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* FAQ ACCORDION */
+function toggleFaq(el){
+  const item=el.parentElement;
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+  if(!wasOpen)item.classList.add('open');
+}
+
+/* BACK TO TOP + FLOAT CTA */
+const backTop=document.getElementById('backTop');
+const floatCta=document.getElementById('floatCta');
+window.addEventListener('scroll',()=>{
+  const s=window.scrollY>400;
+  if(backTop){backTop.classList.toggle('visible',s);}
+  if(floatCta){floatCta.classList.toggle('visible',s);}
+});
+
+/* CURSOR */
+const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=e.clientX+'px';cursor.style.top=e.clientY+'px';});
+document.querySelectorAll('a,button,[onclick]').forEach(el=>{el.addEventListener('mouseenter',()=>cursor.classList.add('expand'));el.addEventListener('mouseleave',()=>cursor.classList.remove('expand'));});
+(function lp(){rx+=(mx-rx)*0.1;ry+=(my-ry)*0.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(lp);})();
+
+/* ROBOT MOUSE TRACKING */
+const robotScene=document.getElementById('robotScene');
+const robotHead=document.getElementById('robotHead');
+const eyeL=document.getElementById('eyeL');
+const eyeR=document.getElementById('eyeR');
+const armLeftG=document.querySelector('.arm-left-g');
+const armRightG=document.querySelector('.arm-right-g');
+document.addEventListener('mousemove',e=>{
+  if(!robotScene||!robotHead)return;
+  const rect=robotScene.getBoundingClientRect();
+  const cx=rect.left+rect.width/2;
+  const cy=rect.top+rect.height/2;
+  const dx=e.clientX-cx;
+  const dy=e.clientY-cy;
+  // Head tilt
+  const hx=Math.max(-14,Math.min(14,dx*0.035));
+  const hy=Math.max(-8,Math.min(8,dy*0.025));
+  robotHead.style.transform=`rotate(${hx*0.4}deg) translateX(${hx*0.5}px) translateY(${hy*0.3}px)`;
+  // Eye pupils (SVG ellipses — move cx/cy)
+  if(eyeL){
+    const ex=Math.max(-5,Math.min(5,dx*0.018));
+    const ey=Math.max(-3,Math.min(3,dy*0.012));
+    eyeL.setAttribute('cx', 216+ex);
+    eyeL.setAttribute('cy', 172+ey);
+    eyeR.setAttribute('cx', 304+ex);
+    eyeR.setAttribute('cy', 172+ey);
+  }
+  // Arms react to horizontal mouse
+  const aAngle=Math.max(-35,Math.min(35,dx*0.055));
+  if(armLeftG){
+    armLeftG.style.animationPlayState='paused';
+    armRightG.style.animationPlayState='paused';
+    armLeftG.style.transform=`rotate(${-90+aAngle*0.45}deg)`;
+    armRightG.style.transform=`rotate(${90+aAngle*0.45}deg)`;
+  }
+});
+document.addEventListener('mouseleave',()=>{
+  if(!robotHead)return;
+  robotHead.style.transform='';
+  if(armLeftG){armLeftG.style.animationPlayState='running';armRightG.style.animationPlayState='running';armLeftG.style.transform='';armRightG.style.transform='';}
+  if(eyeL){eyeL.setAttribute('cx',216);eyeL.setAttribute('cy',172);eyeR.setAttribute('cx',304);eyeR.setAttribute('cy',172);}
+});
+
+/* NAV */
+const navbar=document.getElementById('navbar');
+window.addEventListener('scroll',()=>navbar.classList.toggle('scrolled',window.scrollY>40));
+
+/* REVEAL */
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+
+/* CARD GLOW */
+function moveGlow(e,el){const r=el.getBoundingClientRect();el.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');el.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');}
+document.querySelectorAll('.ov-card').forEach(el=>{el.addEventListener('mousemove',e=>moveGlow(e,el));});
+
+/* TAB SWITCHER */
+function switchTab(agent, tab) {
+  // deactivate all tabs and panes for this agent
+  const allTabs = document.querySelectorAll(`[onclick^="switchTab('${agent}"]`);
+  allTabs.forEach(t => t.classList.remove('active'));
+  // find and deactivate all panes starting with agent prefix
+  ['report','terminal','features','chat','output','diagram','leads','email'].forEach(p => {
+    const el = document.getElementById(`${agent}-${p}`);
+    if(el) el.classList.remove('active');
+  });
+  // activate clicked
+  const clickedTab = Array.from(allTabs).find(t => t.getAttribute('onclick').includes(`'${tab}'`));
+  if(clickedTab) clickedTab.classList.add('active');
+  const pane = document.getElementById(`${agent}-${tab}`);
+  if(pane) pane.classList.add('active');
+}
+
+/* MODAL */
+function openModal(){document.getElementById('demoModal').classList.add('open');document.body.style.overflow='hidden';document.getElementById('modalForm').style.display='block';document.getElementById('modalSuccess').style.display='none';document.querySelectorAll('#modalForm input,#modalForm select').forEach(i=>i.classList.remove('form-error'));}
+function closeModal(){document.getElementById('demoModal').classList.remove('open');document.body.style.overflow='';}
+function handleOverlayClick(e){if(e.target===e.currentTarget)closeModal();}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+function submitDemo(){
+  const fields=[document.getElementById('f-fname'),document.getElementById('f-lname'),document.getElementById('f-email'),document.getElementById('f-company'),document.getElementById('f-agent')];
+  let valid=true;
+  fields.forEach(f=>{if(!f.value.trim()){f.classList.add('form-error');valid=false;}else f.classList.remove('form-error');});
+  if(!valid)return;
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(document.getElementById('f-email').value)){document.getElementById('f-email').classList.add('form-error');return;}
+  document.getElementById('modalForm').style.display='none';
+  document.getElementById('modalSuccess').style.display='block';
+  setTimeout(closeModal,3800);
+}
+
+/* COUNTER */
+const statObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting&&e.target.dataset.target){animateNum(e.target);statObs.unobserve(e.target);}});});
+document.querySelectorAll('[data-target]').forEach(el=>statObs.observe(el));
+function animateNum(el){const target=parseFloat(el.dataset.target),suffix=el.dataset.suffix||'',dur=2000,start=performance.now();function up(now){const p=Math.min((now-start)/dur,1),v=target*(1-Math.pow(1-p,3));el.textContent=Math.round(v)+suffix;if(p<1)requestAnimationFrame(up);else el.textContent=target+suffix;}requestAnimationFrame(up);}
+
+/* TERMINAL CMD */
+const dmResponses = {
+  'satış': '→ Bu haftanın satış analizi yapılıyor...\n✓ Toplam ciro: ₺2.4M (+18% büyüme)\n✓ En çok satan: SKU-1122, SKU-3304\n⚠ Düşük performans: SKU-8871 (-32%)',
+  'stok': '→ Stok durumu kontrol ediliyor...\n✓ 847 aktif SKU taranıyor\n⚠ Kritik: SKU-4421 (12 adet), SKU-5580 (8 adet)\n✓ Otomatik sipariş tetiklendi',
+  'rapor': '→ Günlük rapor oluşturuluyor...\n✓ 3 veri kaynağı okundu\n✓ KPI hesaplandı\n✓ PDF oluşturuldu → Slack\'e gönderildi',
+  'default': '→ Analiz yapılıyor...\n✓ Veriler işlendi\n✓ Sonuç hazır — Detaylı çıktı için demo talep edin.'
+};
+function runDMCmd(){
+  const input=document.getElementById('dm-cmd');
+  const log=document.getElementById('dm-log');
+  const cmd=input.value.trim();
+  if(!cmd)return;
+  const ts=new Date().toTimeString().slice(0,8);
+  const div=document.createElement('div');
+  div.className='t-line';
+  div.innerHTML=`<span class="t-prompt">${ts}</span><span class="t-cmd">$ ${cmd}</span>`;
+  log.appendChild(div);
+  input.value='';
+  const key=Object.keys(dmResponses).find(k=>cmd.toLowerCase().includes(k))||'default';
+  const lines=dmResponses[key].split('\n');
+  lines.forEach((line,i)=>{
+    setTimeout(()=>{
+      const d=document.createElement('div');
+      d.className='t-line';
+      const cls=line.startsWith('⚠')?'t-warn':line.startsWith('✓')?'t-out':'t-dim';
+      d.innerHTML=`<span class="t-prompt">${ts}</span><span class="${cls}">${line}</span>`;
+      log.appendChild(d);
+      log.scrollTop=log.scrollHeight;
+    },i*200);
+  });
+}
+
+/* CHAT */
+// Intelligent chat responses based on keywords
+const supportBotKnowledge = {
+  shipping: {
+    keywords: ['kargo', 'teslimat', 'gönderim', 'geldimi', 'kaç gün', 'ne zaman gelecek', 'sorgu'],
+    responses: [
+      (orderNum) => `Sipariş numaranız: <strong>${orderNum || 'NF-2024-8847'}</strong><br><br>📦 <strong>Durum:</strong> Kargoda<br><strong>Kargo Şirketi:</strong> Aras Kargo<br><strong>Takı Numarası:</strong> 1234567890<br><strong>Tahmini Teslimat:</strong> 1-2 gün içinde<br><strong>Son Güncelleme:</strong> Bugün 14:30<br><br>Bildirim almak istiyorsanız SMS ile otomatik güncellemeler gönderilecektir.`
+    ]
+  },
+  services: {
+    keywords: ['agent', 'çözüm', 'hizmet', 'ne yaptı', 'nasıl çalışıyor', 'özellikleri', 'fiyat'],
+    responses: [
+      'NeuralForge için 7 farklı AI agent çözümümüz var:<br>1️⃣ <strong>DataMind</strong> - Veri analizi<br>2️⃣ <strong>SupportBot Pro</strong> - Müşteri desteği<br>3️⃣ <strong>ContentForge</strong> - İçerik üretimi<br>4️⃣ <strong>ResearchBot</strong> - Pazar araştırması<br>5️⃣ <strong>WorkflowAgent</strong> - Süreç otomasyonu<br>6️⃣ <strong>SalesHunter</strong> - Lead generation<br>7️⃣ <strong>ElevenLabs Sesli Asistan</strong> - Ses interact<br><br>Hangi konuda daha fazla bilgi istersiniz?'
+    ]
+  },
+  technical: {
+    keywords: ['hata', 'sorun', 'çalışmıyor', 'problem', 'bug', 'teknik'],
+    responses: [
+      'Teknik sorununuzu anladım. Lütfen aşağıdaki bilgileri paylaşın:<br>1. Hata mesajı nedir?<br>2. Hangi browserı kullanıyorsunuz?<br>3. Sorun ne zaman başladı?<br><br>Bu bilgiler ile teknik ekibimiz hemen araştırmaya başlayacak. Çok acil ise direkt destek@neuralforge.com adresine mail atabilirsiniz.'
+    ]
+  },
+  pricing: {
+    keywords: ['fiyat', 'ücret', 'maliyet', 'plan', 'paket', 'ne kadar'],
+    responses: [
+      'Fiyatlandırma her projeye göre değişiyor. Ama genel olarak:<br>💚 <strong>Başlangıç:</strong> Aylık ₺5,000 - ₺10,000<br>💙 <strong>Orta:</strong> Aylık ₺15,000 - ₺30,000<br>💜 <strong>Kurumsal:</strong> Özel fiyatlandırma<br><br>İlk konsültation tamamen ücretsiz! Tam itçin hangi agent\'ı uygun olacağını birlikte belirleyelim. Randevu almak isterseniz demo talep et butonuna tıklamanız yeterli.'
+    ]
+  },
+  greeting: {
+    keywords: ['merhaba', 'selam', 'hey'],
+    responses: [
+      'Merhaba! 👋 Ben NeuralForge SupportBot Pro. Size nasıl yardımcı olabilirim?<br><br>Destekleyebildiğim konular:<br>📦 Sipariş takibi & kargo<br>🤖 Agent çözümleriyle ilgili sorular<br>💰 Fiyatlandırma bilgisi<br>🛠️ Teknik destek<br>📞 Konuşmak mı istiyorsunuz?'
+    ]
+  },
+  default: [
+    (msg) => `"${msg}" konusu hakkında bilgim sınırlı ama detaylı bilgi için ekibimizle iletişime geçebilirim. Bunun dışında ne hakkında merak ediyorsunuz?`,
+  ]
+};
+
+function getIntelligentResponse(userMessage) {
+  const msg = userMessage.toLowerCase();
+  
+  // Check each category
+  for (const [category, data] of Object.entries(supportBotKnowledge)) {
+    if (category === 'default') continue;
+    if (data.keywords && data.keywords.some(keyword => msg.includes(keyword))) {
+      const response = data.responses[Math.floor(Math.random() * data.responses.length)];
+      // Extract order number if exists (format NF-XXXX-XXXX)
+      const orderMatch = userMessage.match(/NF-\d+-\d+/);
+      return typeof response === 'function' ? response(orderMatch ? orderMatch[0] : null) : response;
+    }
+  }
+  
+  // Default response
+  const defaultResponse = supportBotKnowledge.default[0];
+  return defaultResponse(userMessage);
+}
+
+function sendChat(){
+  const input=document.getElementById('chat-input');
+  const win=document.getElementById('chat-window');
+  const msg=input.value.trim();
+  if(!msg)return;
+  const now=new Date().toLocaleTimeString('tr',{hour:'2-digit',minute:'2-digit'});
+  const userDiv=document.createElement('div');
+  userDiv.className='chat-msg user';
+  userDiv.innerHTML=`<div class="chat-bubble">${msg}</div><div class="chat-meta">Siz · ${now}</div>`;
+  win.appendChild(userDiv);
+  input.value='';
+  win.scrollTop=win.scrollHeight;
+  const typingDiv=document.createElement('div');
+  typingDiv.className='chat-msg bot';
+  typingDiv.innerHTML=`<div class="chat-bubble"><span class="spinner"></span> Yazıyor...</div>`;
+  win.appendChild(typingDiv);
+  win.scrollTop=win.scrollHeight;
+  setTimeout(()=>{
+    typingDiv.remove();
+    const botDiv=document.createElement('div');
+    botDiv.className='chat-msg bot';
+    const reply=getIntelligentResponse(msg);
+    botDiv.innerHTML=`<div class="chat-bubble">${reply}</div><div class="chat-meta">SupportBot · ${now}</div>`;
+    win.appendChild(botDiv);
+    win.scrollTop=win.scrollHeight;
+  },1200);
+}
+document.getElementById('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat();});
+</script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+# Ortam değişkenleri ve build dosyaları
+.env
+.DS_Store
+Thumbs.db
+
+# Eski kopya (yedek)
+ai-agents-landing (4).html
