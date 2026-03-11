@@ -112,19 +112,21 @@ nav.scrolled{background:rgba(5,5,8,0.92);backdrop-filter:blur(24px);border-botto
 .section-title em{font-style:normal;color:var(--accent3);}
 .section-sub{font-size:1rem;color:var(--muted);max-width:560px;line-height:1.7;margin-bottom:64px;}
 
-/* ======== AGENTS OVERVIEW GRID ======== */
-.agents-overview{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
-.ov-card{background:var(--bg);padding:36px;position:relative;overflow:hidden;transition:background 0.3s;}
-.ov-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),var(--glow) 0%,transparent 60%);opacity:0;transition:opacity 0.3s;}
+/* ======== AGENTS OVERVIEW COMPACT LIST ======== */
+.agents-overview{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);margin-top:48px;}
+.ov-card{background:var(--bg);padding:18px 28px;position:relative;overflow:hidden;transition:background 0.2s;display:flex;align-items:center;gap:20px;border-bottom:1px solid var(--border);cursor:pointer;}
+.ov-card:last-child{border-bottom:none;}
+.ov-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),var(--glow) 0%,transparent 70%);opacity:0;transition:opacity 0.3s;pointer-events:none;}
 .ov-card:hover::before{opacity:1;}
 .ov-card:hover{background:var(--surface);}
-.ov-num{font-family:'DM Mono',monospace;font-size:0.62rem;letter-spacing:0.2em;color:var(--muted);margin-bottom:20px;}
-.ov-icon{font-size:1.8rem;margin-bottom:16px;display:block;}
-.ov-name{font-size:1.1rem;font-weight:700;margin-bottom:8px;}
-.ov-short{font-size:0.83rem;color:var(--muted);line-height:1.55;font-weight:400;margin-bottom:20px;}
-.ov-card .btn-ghost{font-size:0.65rem;padding:8px 16px;}
-.ov-card.featured-ov{grid-column:span 2;background:var(--surface);}
-.ov-badge{position:absolute;top:20px;right:20px;font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;padding:5px 12px;background:rgba(126,255,212,0.1);border:1px solid rgba(126,255,212,0.3);color:var(--accent);}
+.ov-num{font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.18em;color:var(--muted);min-width:24px;flex-shrink:0;}
+.ov-icon{font-size:1.1rem;flex-shrink:0;}
+.ov-name{font-size:0.92rem;font-weight:700;min-width:200px;flex-shrink:0;}
+.ov-short{font-size:0.8rem;color:var(--muted);line-height:1.45;font-weight:400;flex:1;}
+.ov-card .btn-ghost{font-size:0.62rem;padding:6px 14px;white-space:nowrap;flex-shrink:0;margin-left:auto;}
+.ov-card.featured-ov{background:var(--surface);}
+.ov-badge{font-family:'DM Mono',monospace;font-size:0.52rem;letter-spacing:0.12em;text-transform:uppercase;padding:3px 10px;background:rgba(126,255,212,0.1);border:1px solid rgba(126,255,212,0.3);color:var(--accent);white-space:nowrap;flex-shrink:0;}
+@media(max-width:768px){.ov-card{flex-wrap:wrap;gap:10px;padding:16px 20px;}.ov-name{min-width:0;}.ov-short{flex-basis:100%;}.ov-card .btn-ghost{margin-left:0;}}
 
 /* ======== AGENT DETAIL SHOWCASE ======== */
 .showcase{padding:0 48px 120px;}
@@ -779,80 +781,82 @@ footer{border-top:1px solid var(--border);padding:48px;}
 </div>
 
 <!-- ===== AGENTS OVERVIEW ===== -->
-<section class="section" id="agents">
+<section class="section" id="agents" style="padding-bottom:80px;">
   <div class="section-label reveal">AI Agent Portföyü</div>
   <h2 class="section-title reveal">Her iş için <em>doğru agent</em></h2>
-  <p class="section-sub reveal">7 hazır agent çözümümüz var. Her biri belirli bir iş sorununu çözmek için tasarlandı. Aşağıda detaylı örnekleri inceleyebilirsiniz.</p>
+  <p class="section-sub reveal" style="margin-bottom:0;">9 hazır çözüm, her biri belirli bir iş sorununu çözmek için tasarlandı.</p>
   <div class="agents-overview reveal">
-    <div class="ov-card featured-ov">
-      <div class="ov-badge">⚡ En Popüler</div>
-      <div class="ov-num">01</div>
+    <a href="#dm-showcase" class="ov-card featured-ov" style="text-decoration:none;color:inherit;">
+      <span class="ov-num">01</span>
       <span class="ov-icon">🧠</span>
-      <div class="ov-name">DataMind Agent</div>
-      <p class="ov-short">Ham veriyi saniyeler içinde analiz eder, KPI raporları üretir ve anormallikleri tespit eder. Her sabah CEO'nuzun masasında hazır rapor.</p>
-      <a href="#dm-showcase" class="btn-ghost">Canlı Demo →</a>
-    </div>
-    <div class="ov-card">
-      <div class="ov-num">02</div>
+      <span class="ov-name">DataMind Agent</span>
+      <span class="ov-short">Ham veriyi saniyeler içinde analiz eder, KPI raporları üretir, anormallikleri tespit eder.</span>
+      <span class="ov-badge">⚡ Popüler</span>
+      <span style="color:var(--accent);font-size:0.75rem;flex-shrink:0;">→</span>
+    </a>
+    <a href="#sb-showcase" class="ov-card" style="text-decoration:none;color:inherit;">
+      <span class="ov-num">02</span>
       <span class="ov-icon">💬</span>
-      <div class="ov-name">SupportBot Pro</div>
-      <p class="ov-short">7/24 müşteri sorularını yanıtlar, bilet açar, escalate eder. 20+ dil desteği.</p>
-      <a href="#sb-showcase" class="btn-ghost">Canlı Demo →</a>
-    </div>
-    <div class="ov-card">
-      <div class="ov-num">03</div>
+      <span class="ov-name">SupportBot Pro</span>
+      <span class="ov-short">7/24 müşteri sorularını yanıtlar, bilet açar ve escalate eder. 20+ dil.</span>
+      <span style="color:var(--accent);font-size:0.75rem;flex-shrink:0;margin-left:auto;">→</span>
+    </a>
+    <a href="#cf-showcase" class="ov-card" style="text-decoration:none;color:inherit;">
+      <span class="ov-num">03</span>
       <span class="ov-icon">✍️</span>
-      <div class="ov-name">ContentForge</div>
-      <p class="ov-short">Marka sesinizle SEO blog, sosyal medya ve e-posta kampanyaları üretir.</p>
-      <a href="#cf-showcase" class="btn-ghost">Canlı Demo →</a>
-    </div>
-    <div class="ov-card">
-      <div class="ov-num">04</div>
+      <span class="ov-name">ContentForge</span>
+      <span class="ov-short">Marka sesinizle SEO blog, sosyal medya ve e-posta kampanyaları üretir.</span>
+      <span style="color:var(--accent);font-size:0.75rem;flex-shrink:0;margin-left:auto;">→</span>
+    </a>
+    <a href="#rb-showcase" class="ov-card" style="text-decoration:none;color:inherit;">
+      <span class="ov-num">04</span>
       <span class="ov-icon">🔍</span>
-      <div class="ov-name">ResearchBot</div>
-      <p class="ov-short">Web'i tarar, rakip analizi yapar, dakikalar içinde pazar araştırması sunar.</p>
-      <a href="#rb-showcase" class="btn-ghost">Canlı Demo →</a>
-    </div>
-    <div class="ov-card">
-      <div class="ov-num">05</div>
+      <span class="ov-name">ResearchBot</span>
+      <span class="ov-short">Web'i tarar, rakip analizi yapar, dakikalar içinde pazar araştırması sunar.</span>
+      <span style="color:var(--accent);font-size:0.75rem;flex-shrink:0;margin-left:auto;">→</span>
+    </a>
+    <a href="#wf-showcase" class="ov-card" style="text-decoration:none;color:inherit;">
+      <span class="ov-num">05</span>
       <span class="ov-icon">⚙️</span>
-      <div class="ov-name">WorkflowAgent</div>
-      <p class="ov-short">Zapier, Make, N8N ile sistemler arası köprü kurar, iş akışlarını otomatikleştirir.</p>
-      <a href="#wf-showcase" class="btn-ghost">Canlı Demo →</a>
-    </div>
-    <div class="ov-card">
-      <div class="ov-num">06</div>
+      <span class="ov-name">WorkflowAgent</span>
+      <span class="ov-short">Zapier, Make, N8N ile sistemler arası iş akışlarını otomatikleştirir.</span>
+      <span style="color:var(--accent);font-size:0.75rem;flex-shrink:0;margin-left:auto;">→</span>
+    </a>
+    <a href="#sh-showcase" class="ov-card" style="text-decoration:none;color:inherit;">
+      <span class="ov-num">06</span>
       <span class="ov-icon">💼</span>
-      <div class="ov-name">SalesHunter</div>
-      <p class="ov-short">Lead bulur, nitelendirir ve kişiselleştirilmiş outreach e-postaları gönderir.</p>
-      <a href="#sh-showcase" class="btn-ghost">Canlı Demo →</a>
-    </div>
-    <div class="ov-card featured-ov">
-      <div class="ov-num">07</div>
+      <span class="ov-name">SalesHunter</span>
+      <span class="ov-short">Lead bulur, nitelendirir ve kişiselleştirilmiş outreach e-postaları gönderir.</span>
+      <span style="color:var(--accent);font-size:0.75rem;flex-shrink:0;margin-left:auto;">→</span>
+    </a>
+    <a href="#el-showcase" class="ov-card featured-ov" style="text-decoration:none;color:inherit;">
+      <span class="ov-num">07</span>
       <span class="ov-icon">🎤</span>
-      <div class="ov-name">ElevenLabs Sesli Asistan</div>
-      <p class="ov-short">Telefon ve web'de doğal ses ile 7/24 destek. Çok dilli konuşma sentezi, sıfır bekleme süresi.</p>
-      <a href="#el-showcase" class="btn-ghost">Canlı Demo →</a>
-    </div>
-    <div class="ov-card">
-      <div class="ov-num">08</div>
+      <span class="ov-name">ElevenLabs Sesli Asistan</span>
+      <span class="ov-short">Telefon ve web'de doğal ses ile 7/24 destek. 30+ dil, sıfır bekleme.</span>
+      <span class="ov-badge">🎤 Sesli</span>
+      <span style="color:var(--accent);font-size:0.75rem;flex-shrink:0;">→</span>
+    </a>
+    <a href="#oc1-showcase" class="ov-card" style="text-decoration:none;color:inherit;">
+      <span class="ov-num">08</span>
       <span class="ov-icon">🤖</span>
-      <div class="ov-name">OpenClaw İş Asistanı</div>
-      <p class="ov-short">Telegram, Slack ve WhatsApp'tan komutla çalışan; dosya yönetimi, raporlama ve görev yönetimi yapan lokal AI agent.</p>
-      <a href="#oc1-showcase" class="btn-ghost">Canlı Demo →</a>
-    </div>
-    <div class="ov-card">
-      <div class="ov-num">09</div>
-      <span class="ov-icon">⚙️</span>
-      <div class="ov-name">OpenClaw DevOps Agent</div>
-      <p class="ov-short">CI/CD pipeline yönetimi, shell komut çalıştırma, log izleme ve deployment otomasyonu gerçekleştiren geliştirici asistanı.</p>
-      <a href="#oc2-showcase" class="btn-ghost">Canlı Demo →</a>
-    </div>
+      <span class="ov-name">OpenClaw İş Asistanı</span>
+      <span class="ov-short">Telegram, Slack ve WhatsApp'tan komutla çalışan; dosya yönetimi, raporlama yapan lokal AI agent.</span>
+      <span style="color:var(--accent);font-size:0.75rem;flex-shrink:0;margin-left:auto;">→</span>
+    </a>
+    <a href="#oc2-showcase" class="ov-card" style="text-decoration:none;color:inherit;">
+      <span class="ov-num">09</span>
+      <span class="ov-icon">🖥️</span>
+      <span class="ov-name">OpenClaw DevOps Agent</span>
+      <span class="ov-short">CI/CD pipeline yönetimi, shell komutu, log izleme ve deployment otomasyonu.</span>
+      <span style="color:var(--accent);font-size:0.75rem;flex-shrink:0;margin-left:auto;">→</span>
+    </a>
   </div>
 </section>
 
 <!-- ===== SHOWCASE SECTION ===== -->
 <section class="showcase" id="showcase">
+
 
   <!-- ── 01 DataMind ── -->
   <div id="dm-showcase" class="showcase-header reveal">
