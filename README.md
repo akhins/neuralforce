@@ -1,4 +1,4 @@
-# NeuralForge
+# VibeAI
 
 Modern, karanlık (dark) tema ile tasarlanmış tam duyarlı (responsive) bir AI (Yapay Zeka) Agent odaklı açılış sayfası (landing page) projesi. 
 
