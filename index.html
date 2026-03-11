@@ -13,6 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
 <style>
 :root{--bg:#050508;--surface:#0d0d14;--surface2:#111118;--border:rgba(255,255,255,0.07);--accent:#7effd4;--accent2:#ff6b6b;--accent3:#a78bfa;--accent4:#fbbf24;--text:#e8e8f0;--muted:#5a5a72;--glow:rgba(126,255,212,0.15);}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -832,8 +833,22 @@ footer{border-top:1px solid var(--border);padding:48px;}
       <div class="ov-num">07</div>
       <span class="ov-icon">🎤</span>
       <div class="ov-name">ElevenLabs Sesli Asistan</div>
-      <p class="ov-short">Sesli komutlarla etkileşim kurar, doğal konuşma sentezi ile yanıtlar üretir. Çok dilli ses desteği.</p>
+      <p class="ov-short">Telefon ve web'de doğal ses ile 7/24 destek. Çok dilli konuşma sentezi, sıfır bekleme süresi.</p>
       <a href="#el-showcase" class="btn-ghost">Canlı Demo →</a>
+    </div>
+    <div class="ov-card">
+      <div class="ov-num">08</div>
+      <span class="ov-icon">🤖</span>
+      <div class="ov-name">OpenClaw İş Asistanı</div>
+      <p class="ov-short">Telegram, Slack ve WhatsApp'tan komutla çalışan; dosya yönetimi, raporlama ve görev yönetimi yapan lokal AI agent.</p>
+      <a href="#oc1-showcase" class="btn-ghost">Canlı Demo →</a>
+    </div>
+    <div class="ov-card">
+      <div class="ov-num">09</div>
+      <span class="ov-icon">⚙️</span>
+      <div class="ov-name">OpenClaw DevOps Agent</div>
+      <p class="ov-short">CI/CD pipeline yönetimi, shell komut çalıştırma, log izleme ve deployment otomasyonu gerçekleştiren geliştirici asistanı.</p>
+      <a href="#oc2-showcase" class="btn-ghost">Canlı Demo →</a>
     </div>
   </div>
 </section>
@@ -1177,7 +1192,191 @@ footer{border-top:1px solid var(--border);padding:48px;}
 
 </section><!-- end showcase -->
 
-<!-- ===== PROCESS ===== -->
+<!-- ===== ELEVENLABS SHOWCASE ===== -->
+<section class="showcase" id="el-section" style="padding-top:0;">
+  <div class="showcase-divider" style="margin:0 auto 0;max-width:1200px;margin-bottom:80px;"></div>
+
+  <div id="el-showcase" class="showcase-header reveal">
+    <div class="showcase-header-inner">
+      <div class="sh-left">
+        <div class="sh-agent-id">Agent 07 — ElevenLabs Sesli Destek</div>
+        <h3 class="sh-title">Telefonda insan gibi,<br>7/24 sesli destek</h3>
+        <p class="sh-desc">ElevenLabs Conversational AI ile güçlendirilmiş sesli asistan; gelen aramaları karşılar, soruları yanıtlar, bilet açar ve gerektiğinde insan temsilciye bağlar. Sıfır bekleme, sıfır maliyet fırsatı.</p>
+      </div>
+      <div class="sh-right">
+        <div class="sh-metrics-row">
+          <div class="sh-metric"><div class="sh-metric-val">&lt;1sn</div><div class="sh-metric-label">Yanıt Gecikmesi</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">30+</div><div class="sh-metric-label">Dil Desteği</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">7/24</div><div class="sh-metric-label">Kesintisiz</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="demo-panel reveal">
+    <div class="demo-panel-tabs">
+      <button class="dp-tab active" onclick="switchTab('el','widget')">🎤 Canlı Sesli Demo</button>
+      <button class="dp-tab" onclick="switchTab('el','features')">✦ Özellikler</button>
+    </div>
+    <div class="demo-panel-body">
+      <div class="dp-pane active" id="el-widget" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:320px;gap:24px;">
+        <!-- ElevenLabs Phone Support Demo Visual -->
+        <div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap;justify-content:center;width:100%;">
+          <!-- Phone mockup -->
+          <div style="background:var(--surface2);border:1px solid var(--border);border-radius:24px;padding:32px 28px;min-width:232px;display:flex;flex-direction:column;align-items:center;gap:16px;box-shadow:0 0 40px rgba(126,255,212,0.06);">
+            <div style="font-family:'DM Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;color:var(--muted);text-transform:uppercase;">Sesli Destek Hattı</div>
+            <div id="el-call-status" style="width:80px;height:80px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:2rem;box-shadow:0 0 24px rgba(126,255,212,0.2);transition:all 0.4s;">🎤</div>
+            <div id="el-status-text" style="font-size:0.82rem;color:var(--muted);text-align:center;">Asistana bağlanmak için başlat'a tıklayın</div>
+            <div style="display:flex;gap:12px;margin-top:4px;">
+              <button id="el-start-btn" onclick="startELDemo()" style="background:var(--accent);color:#050508;border:none;border-radius:8px;padding:10px 24px;font-size:0.82rem;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;">▶ Başlat</button>
+              <button id="el-end-btn" onclick="endELDemo()" style="background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:8px;padding:10px 20px;font-size:0.82rem;cursor:pointer;font-family:inherit;display:none;">✕ Kapat</button>
+            </div>
+          </div>
+          <!-- Conversation log -->
+          <div id="el-convo-log" style="flex:1;min-width:260px;max-width:420px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;min-height:220px;display:flex;flex-direction:column;gap:10px;">
+            <div style="font-family:'DM Mono',monospace;font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;">Konuşma Geçmişi</div>
+            <div class="el-msg el-bot" style="background:rgba(126,255,212,0.07);border-radius:8px;padding:10px 12px;font-size:0.8rem;border-left:2px solid var(--accent);">
+              <span style="color:var(--accent);font-size:0.65rem;font-family:'DM Mono',monospace;">ASISTAN</span><br>
+              Merhaba! Ben NeuralForge sesli destek asistanınız. Size nasıl yardımcı olabilirim?
+            </div>
+          </div>
+        </div>
+        <!-- Real ElevenLabs Widget — Agent ID'nizi buraya ekleyin -->
+        <!-- <elevenlabs-convai agent-id="AGENT_ID_BURAYA"></elevenlabs-convai> -->
+        <p style="font-size:0.72rem;color:var(--muted);text-align:center;max-width:480px;">
+          Demo modunda simüle edilmiş konuşma gösterilmektedir. Gerçek sesli entegrasyon için 
+          <a href="#" onclick="openModal();return false;" style="color:var(--accent);">ücretsiz görüşme</a> talep edin.
+        </p>
+      </div>
+      <div class="dp-pane" id="el-features">
+        <div class="features-list">
+          <div class="feature-item"><div class="fi-icon">🗣️</div><div><div class="fi-title">Doğal Konuşma Kalitesi</div><div class="fi-desc">ElevenLabs'ın en gelişmiş ses sentezi ile insan sesiyle neredeyse ayırt edilemez kalite.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🌍</div><div><div class="fi-title">30+ Dil Desteği</div><div class="fi-desc">Türkçe, İngilizce, Almanca, Arapça ve 30'dan fazla dilde anadil düzeyinde destek.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">📞</div><div><div class="fi-title">Telefon Hattı Entegrasyonu</div><div class="fi-desc">Twilio veya doğrudan SIP entegrasyonu ile gelen aramaları otomatik karşılar.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🧠</div><div><div class="fi-title">Bilgi Tabanı Bağlantısı</div><div class="fi-desc">Ürün kataloğunuzu, SSS'nizi ve iç belgeleri öğrenir; doğru yanıtları anında sunar.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🔀</div><div><div class="fi-title">Akıllı Yönlendirme</div><div class="fi-desc">Çözemediği konularda arayanı doğru departmana veya insan temsilciye sorunsuzca bağlar.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">📊</div><div><div class="fi-title">Görüşme Analitikleri</div><div class="fi-desc">Tüm konuşmalar kaydedilir, transkript oluşturulur ve duygu analizi yapılır.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== OPENCLAW SHOWCASE ===== -->
+<section class="showcase" id="oc-section" style="padding-top:0;">
+  <div class="showcase-divider" style="max-width:1200px;margin:0 auto 80px;"></div>
+
+  <!-- 08 OpenClaw Business -->
+  <div id="oc1-showcase" class="showcase-header reveal">
+    <div class="showcase-header-inner">
+      <div class="sh-left">
+        <div class="sh-agent-id">Agent 08 — OpenClaw İş Asistanı</div>
+        <h3 class="sh-title">Mesajlaşma uygulamasından<br>komutla çalışan asistan</h3>
+        <p class="sh-desc">OpenClaw tabanlı ajan; Telegram, Slack veya WhatsApp'tan aldığı doğal dil komutlarıyla dosya yönetimi yapar, raporlar oluşturur, hatırlatma kurar ve iş akışlarını tetikler. Kutunun dışına çıkmadan, kendi sunucunuzda çalışır.</p>
+      </div>
+      <div class="sh-right">
+        <div class="sh-metrics-row">
+          <div class="sh-metric"><div class="sh-metric-val">5700+</div><div class="sh-metric-label">AgentSkill</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">100%</div><div class="sh-metric-label">Self-Hosted</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">4+</div><div class="sh-metric-label">LLM Seçimi</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="demo-panel reveal">
+    <div class="demo-panel-tabs">
+      <button class="dp-tab active" onclick="switchTab('oc1','terminal')">⌨ Telegram Demo</button>
+      <button class="dp-tab" onclick="switchTab('oc1','features')">✦ Özellikler</button>
+    </div>
+    <div class="demo-panel-body">
+      <div class="dp-pane active" id="oc1-terminal">
+        <div class="terminal" id="oc1-log">
+          <div class="t-line"><span class="t-prompt" style="color:#29b6f6;">@siz</span><span class="t-out"> Bugünkü toplantı notlarını özetle ve Notion'a kaydet</span></div>
+          <div class="t-line"><span class="t-prompt">agent</span><span class="t-dim"> → Toplantı notları dosyasi okunuyor...</span></div>
+          <div class="t-line"><span class="t-prompt">agent</span><span class="t-out"> ✓ 3 karar noktası, 5 aksiyon maddesi tespit edildi</span></div>
+          <div class="t-line"><span class="t-prompt">agent</span><span class="t-out"> ✓ Özet oluşturuldu → Notion'a kaydedildi</span></div>
+          <div class="t-line"><span class="t-prompt" style="color:#29b6f6;">@siz</span><span class="t-out"> Yarın saat 10'da "Q2 raporu hazırla" hatırlatması kur</span></div>
+          <div class="t-line"><span class="t-prompt">agent</span><span class="t-out"> ✓ Hatırlatma kuruldu: 12 Mart 10:00 → "Q2 raporu hazırla"</span></div>
+          <div class="t-line"><span class="t-prompt" style="color:#29b6f6;">@siz</span><span class="t-out"> Geçen haftaki satış verilerinden özet rapor çıkar</span></div>
+          <div class="t-line"><span class="t-prompt">agent</span><span class="t-dim"> → Google Sheets veri kaynağı okunuyor...</span></div>
+          <div class="t-line"><span class="t-prompt">agent</span><span class="t-out"> ✓ Rapor oluşturuldu — PDF olarak Telegram'a gönderiliyor...</span></div>
+          <div class="t-line"><span class="t-prompt">agent</span><span class="t-out t-hi"> ✦ Rapor teslim edildi (4.2 saniye)</span></div>
+        </div>
+        <div class="terminal-run">
+          <input type="text" id="oc1-cmd" placeholder="Örn: 'Inbox'ımdaki müşteri e-postalarını özetle'" onkeydown="if(event.key==='Enter')runOC1Cmd()">
+          <button class="run-btn" onclick="runOC1Cmd()">Gönder ▶</button>
+        </div>
+      </div>
+      <div class="dp-pane" id="oc1-features">
+        <div class="features-list">
+          <div class="feature-item"><div class="fi-icon">💬</div><div><div class="fi-title">Çok Kanallı Arayüz</div><div class="fi-desc">Telegram, Discord, WhatsApp, Slack ve iMessage — tek agent, tüm mesajlaşma kanalları.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">📁</div><div><div class="fi-title">Dosya Yönetimi</div><div class="fi-desc">Dosya oluşturma, düzenleme, sıkıştırma ve bulut depolama entegrasyonu (Drive, Dropbox).</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🧠</div><div><div class="fi-title">Kalıcı Bellek</div><div class="fi-desc">Tercihlerinizi, geçmiş komutları ve proje bağlamını hafızada tutar — her gün daha akıllı.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🔌</div><div><div class="fi-title">5700+ AgentSkill</div><div class="fi-desc">ClawHub'dan indirilen yeteneklerle web arama, e-posta, takvim ve daha fazlası.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🛡️</div><div><div class="fi-title">Tamamen Self-Hosted</div><div class="fi-desc">Verileriniz sunucunuzda kalır. Mac, Windows veya Linux üzerinde çalışır.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🤖</div><div><div class="fi-title">Model Agnostik</div><div class="fi-desc">Claude, GPT-4, Gemini, DeepSeek — dilediğiniz LLM ile çalışır, değiştirilebilir.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="showcase-divider" style="max-width:1200px;margin:80px auto;"></div>
+
+  <!-- 09 OpenClaw DevOps -->
+  <div id="oc2-showcase" class="showcase-header reveal">
+    <div class="showcase-header-inner">
+      <div class="sh-left">
+        <div class="sh-agent-id">Agent 09 — OpenClaw DevOps Agent</div>
+        <h3 class="sh-title">Pipeline'dan deploy'a<br>tam otomasyon</h3>
+        <p class="sh-desc">OpenClaw DevOps Agent; CI/CD pipeline tetikler, shell komutları çalıştırır, log'ları izler ve anomali tespit edince Slack'e bildirim gönderir. Geliştirici süreçlerini hızlandırmak için tasarlanmış, tam özelleştirilebilir yapı.</p>
+      </div>
+      <div class="sh-right">
+        <div class="sh-metrics-row">
+          <div class="sh-metric"><div class="sh-metric-val">%91</div><div class="sh-metric-label">Deploy Hızı</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">0</div><div class="sh-metric-label">Manuel Adım</div></div>
+          <div class="sh-metric"><div class="sh-metric-val">24/7</div><div class="sh-metric-label">Log İzleme</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="demo-panel reveal">
+    <div class="demo-panel-tabs">
+      <button class="dp-tab active" onclick="switchTab('oc2','terminal')">⌨ DevOps Logu</button>
+      <button class="dp-tab" onclick="switchTab('oc2','features')">✦ Özellikler</button>
+    </div>
+    <div class="demo-panel-body">
+      <div class="dp-pane active" id="oc2-terminal">
+        <div class="terminal" id="oc2-log">
+          <div class="t-line"><span class="t-prompt">14:02:01</span><span class="t-out"> ▶ OpenClaw DevOps Agent başlatıldı</span></div>
+          <div class="t-line"><span class="t-prompt">14:02:02</span><span class="t-dim"> → GitHub webhook alındı: main branch'e push</span></div>
+          <div class="t-line"><span class="t-prompt">14:02:03</span><span class="t-out"> ✓ Test suite çalıştırılıyor... (42 test)</span></div>
+          <div class="t-line"><span class="t-prompt">14:02:18</span><span class="t-out"> ✓ Tüm testler geçti (42/42)</span></div>
+          <div class="t-line"><span class="t-prompt">14:02:19</span><span class="t-dim"> → Docker image build ediliyor...</span></div>
+          <div class="t-line"><span class="t-prompt">14:02:47</span><span class="t-out"> ✓ Image build tamamlandı → registry'e push edildi</span></div>
+          <div class="t-line"><span class="t-prompt">14:02:48</span><span class="t-dim"> → Staging'e deploy ediliyor...</span></div>
+          <div class="t-line"><span class="t-prompt">14:02:55</span><span class="t-out"> ✓ Staging deploy başarılı — health check OK</span></div>
+          <div class="t-line"><span class="t-prompt">14:03:10</span><span class="t-warn"> ⚠ Production CPU %87'ye çıktı — uyarı Slack'e gönderildi</span></div>
+          <div class="t-line"><span class="t-prompt">14:03:11</span><span class="t-out t-hi"> ✦ Pipeline tamamlandı (1dk 10sn) — Onay bekleniyor</span></div>
+        </div>
+        <div class="terminal-run">
+          <input type="text" id="oc2-cmd" placeholder="Örn: 'Production loglarında son 1 saatteki hataları listele'" onkeydown="if(event.key==='Enter')runOC2Cmd()">
+          <button class="run-btn" onclick="runOC2Cmd()">Çalıştır ▶</button>
+        </div>
+      </div>
+      <div class="dp-pane" id="oc2-features">
+        <div class="features-list">
+          <div class="feature-item"><div class="fi-icon">🚀</div><div><div class="fi-title">CI/CD Otomasyonu</div><div class="fi-desc">GitHub Actions, GitLab CI veya Jenkins'le entegre — push'tan deploy'a sıfır manuel adım.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🖥️</div><div><div class="fi-title">Shell Komut Çalıştırma</div><div class="fi-desc">Güvenli sandbox içinde bash/powershell komutları çalıştırır, sonuçları raporlar.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">📋</div><div><div class="fi-title">Log İzleme ve Anomali Tespiti</div><div class="fi-desc">Uygulama loglarını gerçek zamanlı okur, hata pattern'lerini tespit eder, uyarı gönderir.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🐳</div><div><div class="fi-title">Container Yönetimi</div><div class="fi-desc">Docker / Kubernetes entegrasyonu ile container başlatma, durdurma ve ölçekleme.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🔔</div><div><div class="fi-title">Çok Kanallı Bildirim</div><div class="fi-desc">Slack, Teams, veya e-posta ile kritik olayların anında bildirimi — özelleştirilebilir eşikler.</div></div></div>
+          <div class="feature-item"><div class="fi-icon">🔒</div><div><div class="fi-title">Güvenli Yürütme Ortamı</div><div class="fi-desc">Her komut izin listesiyle denetlenir. Kritik eylemler çift onay gerektirir.</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
 <section class="process" id="how">
   <div class="section-label reveal">Süreç</div>
   <h2 class="section-title reveal">4 adımda<br><em>aktif agent</em></h2>
@@ -1265,7 +1464,7 @@ footer{border-top:1px solid var(--border);padding:48px;}
   <div class="footer-top">
     <div class="footer-brand"><div class="footer-brand-name"><div class="nav-logo-dot"></div>NEURALFORGE</div><p class="footer-brand-desc">Otonom AI agent'lar ile iş süreçlerinizi dönüştürüyoruz. Her agent, sizin işinize özel tasarlanır.</p></div>
     <div class="footer-col"><h4>Çözümler</h4><ul><li><a href="#dm-showcase">DataMind Agent</a></li><li><a href="#sb-showcase">SupportBot Pro</a></li><li><a href="#cf-showcase">ContentForge</a></li><li><a href="#wf-showcase">WorkflowAgent</a></li><li><a href="#sh-showcase">SalesHunter</a></li></ul></div>
-    <div class="footer-col"><h4>Şirket</h4><ul><li><a href="#faq">SSS</a></li><li><a href="#how">Nasıl Çalışır</a></li><li><a href="#testimonials">Referanslar</a></li><li><a href="#" onclick="openModal();return false;">Demo Talep Et</a></li></ul></div>
+    <div class="footer-col"><h4>Şirket</h4><ul><li><a href="#faq">SSS</a></li><li><a href="#how">Nasıl Çalışır</a></li><li><a href="#" onclick="openModal();return false;">Demo Talep Et</a></li></ul></div>
     <div class="footer-col"><h4>İletişim</h4><ul><li><a href="/cdn-cgi/l/email-protection#9af2fff6f6f5daf4ffefe8fbf6fbf3fcf5e8fdffb4f9f5f7"><span class="__cf_email__" data-cfemail="355d5059595a755b5040475459545c535a4752501b565a58">[email&#160;protected]</span></a></li><li><a href="#">LinkedIn</a></li><li><a href="#">X / Twitter</a></li><li><a href="#">Instagram</a></li></ul></div>
   </div>
   <div class="footer-bottom">
@@ -1275,7 +1474,108 @@ footer{border-top:1px solid var(--border);padding:48px;}
 </footer>
 
 <script>
+/* ELEVENLABS DEMO SIMULATION */
+let elDemoTimer=null;
+const elConvos=[
+  {role:'user',text:'Siparişimin durumunu öğrenmek istiyorum.'},
+  {role:'bot',text:'Sipariş numaranızı söyler misiniz? Hemen kontrol edeyim.'},
+  {role:'user',text:'NF-2024-7712'},
+  {role:'bot',text:'Siparişinizi buldum! Kargo bugün 17:00\'de çıkacak, yarın teslim edilecek. Başka bir konuda yardımcı olabilir miyim?'},
+];
+let elStep=0;
+function startELDemo(){
+  const status=document.getElementById('el-call-status');
+  const statusText=document.getElementById('el-status-text');
+  const startBtn=document.getElementById('el-start-btn');
+  const endBtn=document.getElementById('el-end-btn');
+  const log=document.getElementById('el-convo-log');
+  status.style.background='rgba(126,255,212,0.15)';
+  status.style.borderColor='var(--accent)';
+  status.style.boxShadow='0 0 32px rgba(126,255,212,0.35)';
+  status.textContent='📞';
+  statusText.textContent='Bağlanıyor...';
+  startBtn.style.display='none';
+  endBtn.style.display='block';
+  elStep=0;
+  setTimeout(()=>{statusText.textContent='Bağlantı kuruldu — Konuşabilirsiniz';addELMsg('bot','Merhaba! Ben NeuralForge sesli destek asistanınız. Size nasıl yardımcı olabilirim?');runELStep();},1200);
+}
+function runELStep(){
+  if(elStep>=elConvos.length)return;
+  const c=elConvos[elStep++];
+  setTimeout(()=>{addELMsg(c.role,c.text);runELStep();},elStep%2===0?1800:2800);
+}
+function addELMsg(role,text){
+  const log=document.getElementById('el-convo-log');
+  const div=document.createElement('div');
+  const isBot=role==='bot';
+  div.style.cssText=`background:${isBot?'rgba(126,255,212,0.07)':'rgba(167,139,250,0.07)'};border-radius:8px;padding:10px 12px;font-size:0.8rem;border-left:2px solid ${isBot?'var(--accent)':'var(--accent3)'};animation:fadeUp 0.3s ease;`;
+  div.innerHTML=`<span style="color:${isBot?'var(--accent)':'var(--accent3)'};font-size:0.65rem;font-family:'DM Mono',monospace;">${isBot?'ASISTAN':'SİZ'}</span><br>${text}`;
+  log.appendChild(div);
+  log.scrollTop=log.scrollHeight;
+}
+function endELDemo(){
+  document.getElementById('el-call-status').textContent='🎤';
+  document.getElementById('el-call-status').style.background='var(--surface)';
+  document.getElementById('el-call-status').style.boxShadow='0 0 24px rgba(126,255,212,0.2)';
+  document.getElementById('el-status-text').textContent='Konuşma sonlandırıldı.';
+  document.getElementById('el-start-btn').style.display='block';
+  document.getElementById('el-end-btn').style.display='none';
+  elStep=elConvos.length;
+}
+
+/* OPENCLAW BUSINESS TERMINAL */
+const oc1Responses={
+  'rapor':'→ Veri kaynakları okunuyor...\n✓ 12 dosya analiz edildi\n✓ Özet rapor oluşturuldu → PDF olarak gönderildi',
+  'ozet':'→ Belge okunuyor (NLP ile işleniyor)...\n✓ Ana temalar çıkarıldı\n✓ 5 madde özet teslim edildi',
+  'hatirla':'→ Takvim entegrasyonu kontrol ediliyor...\n✓ Hatırlatma başarıyla kuruldu → Bildirim planlandı',
+  'email':'→ Gelen kutusu analiz ediliyor...\n✓ 14 yeni e-posta işlendi\n✓ 3 öncelikli eylem tespit edildi → Listesi hazır',
+  'default':'→ Komut işleniyor...\n✓ Analiz tamamlandı\n✦ Detaylı çıktı için demo görüşmesi talep edin.'
+};
+function runOC1Cmd(){
+  const inp=document.getElementById('oc1-cmd');
+  const log=document.getElementById('oc1-log');
+  const cmd=inp.value.trim();if(!cmd)return;
+  const line=document.createElement('div');line.className='t-line';
+  line.innerHTML=`<span class="t-prompt" style="color:#29b6f6;">@siz</span><span class="t-out"> ${cmd}</span>`;
+  log.appendChild(line);
+  const key=Object.keys(oc1Responses).find(k=>cmd.toLowerCase().includes(k))||'default';
+  oc1Responses[key].split('\n').forEach((r,i)=>{
+    setTimeout(()=>{const l=document.createElement('div');l.className='t-line';
+      l.innerHTML=`<span class="t-prompt">agent</span><span class="${r.startsWith('✦')?'t-out t-hi':r.startsWith('⚠')?'t-warn':r.startsWith('✓')?'t-out':'t-dim'}"> ${r}</span>`;
+      log.appendChild(l);log.scrollTop=log.scrollHeight;
+    },i*500+400);
+  });
+  inp.value='';log.scrollTop=log.scrollHeight;
+}
+
+/* OPENCLAW DEVOPS TERMINAL */
+const oc2Responses={
+  'deploy':'→ GitHub Actions tetikleniyor...\n✓ Build başlatıldı (workflow: deploy.yml)\n✓ 38 test geçti\n✓ Image push edildi → Staging deploy tamamlandı',
+  'log':'→ Son 1 saatin logları okunuyor...\n⚠ 3 adet 500 hatası tespit edildi (14:12, 14:18, 14:31)\n✓ Hata raporu oluşturuldu → Slack kanalına gönderildi',
+  'cpu':'→ Sunucu metrikleri okunuyor...\n✓ CPU: %43 | RAM: 2.1GB / 8GB | Disk: %61\n✦ Sistem sağlıklı görünüyor.',
+  'restart':'→ Servis yeniden başlatılıyor (güvenli mod)...\n✓ Servis durduruldu\n✓ Servis başlatıldı → Health check OK',
+  'default':'→ DevOps komutu işleniyor...\n✓ Ortam kontrol edildi\n✦ Hazır. Demo için görüşme talep edin.'
+};
+function runOC2Cmd(){
+  const inp=document.getElementById('oc2-cmd');
+  const log=document.getElementById('oc2-log');
+  const cmd=inp.value.trim();if(!cmd)return;
+  const now=new Date();const ts=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+  const line=document.createElement('div');line.className='t-line';
+  line.innerHTML=`<span class="t-prompt">${ts}</span><span class="t-out"> ▷ ${cmd}</span>`;
+  log.appendChild(line);
+  const key=Object.keys(oc2Responses).find(k=>cmd.toLowerCase().includes(k))||'default';
+  oc2Responses[key].split('\n').forEach((r,i)=>{
+    setTimeout(()=>{const l=document.createElement('div');l.className='t-line';
+      l.innerHTML=`<span class="t-prompt">${ts}</span><span class="${r.startsWith('✦')?'t-out t-hi':r.startsWith('⚠')?'t-warn':r.startsWith('✓')?'t-out':'t-dim'}"> ${r}</span>`;
+      log.appendChild(l);log.scrollTop=log.scrollHeight;
+    },i*480+300);
+  });
+  inp.value='';log.scrollTop=log.scrollHeight;
+}
+
 /* HAMBURGER MENU */
+
 function toggleMobile(){
   const m=document.getElementById('mobileMenu');
   const h=document.getElementById('hamburger');
